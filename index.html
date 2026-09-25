@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>My Timetable: classes and shifts</title>
+<title>Semaine: classes and shifts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -37,6 +37,7 @@
   color-scheme: dark;
 }
 *,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
 html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px)}
 body{height:100%; margin:0; background:var(--bg); color:var(--ink); font:15px/1.45 var(--body); display:flex; flex-direction:column; overflow:hidden; -webkit-font-smoothing:antialiased}
 button,input,select{font:inherit; color:inherit}
@@ -61,7 +62,31 @@ button{cursor:pointer}
 .viewseg{display:flex; border:1px solid var(--line); background:var(--surface); border-radius:10px; padding:2px; margin-left:6px}
 .viewseg button{height:30px; padding:0 11px; border:0; border-radius:8px; background:transparent; font-weight:600; font-size:13.5px; color:var(--muted)}
 .viewseg button[aria-pressed="true"]{background:var(--ink); color:var(--surface)}
-body.month-mode .strip, body.month-mode #copyW{display:none!important}
+body.month-mode .strip, body.month-mode #copyW, body.list-mode .strip{display:none!important}
+.agenda{max-width:760px; margin:0 auto; padding:6px 14px 28px}
+.aday{margin-bottom:6px}
+.ahead{position:sticky; top:0; z-index:2; background:var(--surface); display:flex; align-items:center; gap:10px; padding:14px 0 8px; border-bottom:1px solid var(--line-soft); margin-bottom:8px}
+.ahead .adn{font:700 18px/1.1 var(--display); letter-spacing:-.01em}
+.ahead .add{color:var(--muted); font-size:13.5px; margin-left:6px}
+.aday.today .adn{color:var(--class)}
+.tag{font-size:11.5px; font-weight:700; color:var(--class); background:color-mix(in srgb,var(--class) 12%,transparent); padding:2px 8px; border-radius:999px}
+.atot{margin-left:auto; font-size:12.5px; color:var(--muted); white-space:nowrap}
+.aadd{width:32px; height:32px; border-radius:9px; border:1px solid var(--line); background:var(--surface); display:grid; place-items:center; padding:0; font-size:19px; line-height:1; color:var(--muted); flex:none}
+.aadd:hover{background:var(--surface-2); color:var(--ink)}
+.aev{width:100%; display:grid; grid-template-columns:58px 1fr; gap:12px; align-items:start; text-align:left; padding:10px 12px; border-radius:12px; border:1px solid color-mix(in srgb,var(--c) 32%,transparent); border-left:4px solid var(--c); background-color:color-mix(in srgb,var(--c) 11%,var(--surface)); margin-bottom:6px}
+.aev.shift{background-image:repeating-linear-gradient(135deg,color-mix(in srgb,var(--c) 9%,transparent) 0 6px,transparent 6px 12px)}
+.aev.personal{border-style:dashed; border-left-style:solid}
+.aev.clash{outline:2px solid var(--clash); outline-offset:-2px}
+.aev:hover{filter:brightness(.98)}
+.atime{font-variant-numeric:tabular-nums; font-weight:700; font-size:14px; line-height:1.3}
+.atime span{display:block; font-weight:500; color:var(--muted)}
+.abody{min-width:0}
+.abody b{display:block; font-size:15.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.ameta{display:block; color:var(--muted); font-size:13px; margin-top:1px}
+.ameta .bad{color:var(--clash); font-weight:600}
+.agap{font-size:12px; color:var(--muted); padding:0 0 6px 70px; display:flex; align-items:center; gap:8px}
+.agap::after{content:""; flex:1; border-top:1px dashed var(--line)}
+.afree{margin:2px 0 8px; color:var(--muted); font-size:14px; padding:10px 12px; border:1px dashed var(--line); border-radius:12px}
 .month{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); grid-template-rows:auto repeat(var(--rows),minmax(112px,1fr)); min-height:100%}
 .mh{padding:10px 10px 8px; font-size:13px; color:var(--muted); border-bottom:1px solid var(--line); position:sticky; top:0; background:var(--surface); z-index:2}
 .mcell{border:0; border-right:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft); background:transparent; text-align:left; padding:6px; display:flex; flex-direction:column; gap:3px; min-width:0; overflow:hidden}
@@ -252,7 +277,7 @@ dialog::backdrop{background:rgba(10,16,32,.45)}
     <button class="icon-btn" id="prevW" aria-label="Previous week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
     <button class="btn" id="todayW">Today</button>
     <button class="icon-btn" id="nextW" aria-label="Next week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
-    <div class="viewseg" role="group" aria-label="View" id="viewSeg"><button data-m="week" aria-pressed="true">Week</button><button data-m="month" aria-pressed="false">Month</button></div>
+    <div class="viewseg" role="group" aria-label="View" id="viewSeg"><button data-m="week" aria-pressed="true">Week</button><button data-m="list" aria-pressed="false">List</button><button data-m="month" aria-pressed="false">Month</button></div>
   </div>
   <div class="tally" id="tally"></div>
   <div class="tools">
@@ -370,6 +395,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"
 const cap=s=>s.replace(/(^|[\s-])([a-zà-ÿ])/g,(m,a,b)=>a+b.toUpperCase());
 const MONS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 const DNS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const DNF=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const TYPE_LABEL={class:"Class",shift:"Work",personal:"Personal"};
 const hrs=m=>{const v=Math.round(m/6)/10;return (Number.isInteger(v)?v:v.toFixed(1))+"h";};
 const toInput=m=>{m=m%1440;return pad(Math.floor(m/60))+":"+pad(m%60);};
@@ -390,7 +416,8 @@ const state={
   settings:{lang:"en-US",clock:"24",remind:30,cap:964,capFrom:new Date().getFullYear()+"-01-01",theme:"auto"},
   view:mondayOf(today0()),
   selDay:(today0().getDay()+6)%7,
-  mode:"week", month:new Date(today0().getFullYear(),today0().getMonth(),1),
+  mode:(()=>{try{const m=localStorage.getItem("semaine.mode");if(m==="week"||m==="list"||m==="month")return m;}catch(e){}return window.matchMedia("(max-width:720px)").matches?"list":"week";})(),
+  lastWeekMode:"week", month:new Date(today0().getFullYear(),today0().getMonth(),1),
   cmd:"add", dels:[], cmdErr:null,
   drafts:[], heard:""
 };
@@ -810,6 +837,7 @@ function layoutDay(evs){
 let firstRender=true;
 function render(){
   document.body.classList.toggle("month-mode",state.mode==="month");
+  document.body.classList.toggle("list-mode",state.mode==="list");
   document.querySelectorAll("#viewSeg button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.m===state.mode)));
   const unit=state.mode==="month"?"month":"week";
   $("#prevW").setAttribute("aria-label","Previous "+unit);$("#nextW").setAttribute("aria-label","Next "+unit);
@@ -860,8 +888,37 @@ function renderMonth(){
   }
   cal.innerHTML=h+"</div>";
 }
+function renderList(){
+  const cal=$("#cal"),keep=cal.scrollTop,ti=iso(today0());
+  let h=`<div class="agenda">`;
+  for(let i=0;i<7;i++){
+    const d=addDays(state.view,i),di=iso(d);
+    const evs=eventsOn(di).sort((a,b)=>a.start-b.start||a.end-b.end);
+    const tot=evs.reduce((s,e)=>s+e.end-e.start,0);
+    h+=`<section class="aday${di===ti?" today":""}" data-date="${di}"><div class="ahead"><span><span class="adn">${DNF[i]}</span><span class="add">${d.getDate()} ${MONS[d.getMonth()]}</span></span>${di===ti?`<span class="tag">Today</span>`:""}<span class="atot">${evs.length?`${hrs(tot)} across ${evs.length} event${evs.length===1?"":"s"}`:""}</span><button class="aadd" data-date="${di}" aria-label="Add event on ${DNF[i]} ${d.getDate()} ${MONS[d.getMonth()]}">+</button></div>`;
+    if(!evs.length)h+=`<p class="afree">Nothing planned</p>`;
+    let lastEnd=null;
+    for(const e of evs){
+      if(lastEnd!==null&&e.start-lastEnd>=30)h+=`<div class="agap">${hrs(e.start-lastEnd)} free</div>`;
+      const clash=evs.some(o=>o!==e&&overlaps(o,e));
+      const meta=[TYPE_LABEL[e.type],hrs(e.end-e.start)].concat(e.location?[esc(e.location)]:[]).join(", ");
+      h+=`<button class="aev ${e.type}${clash?" clash":""}" data-id="${e.id}" style="--c:var(--${e.type})" aria-label="${esc(`${e.title}, ${TYPE_LABEL[e.type]}, ${fmtT(e.start)} to ${fmtT(e.end)}${e.location?", "+e.location:""}${clash?", overlaps another event":""}`)}"><span class="atime">${fmtT(e.start)}<span>${fmtT(e.end)}</span></span><span class="abody"><b>${esc(e.title)}</b><span class="ameta">${meta}${clash?` <span class="bad">Overlap</span>`:""}</span></span></button>`;
+      lastEnd=Math.max(lastEnd||0,e.end);
+    }
+    h+=`</section>`;
+  }
+  cal.innerHTML=h+`</div>`;
+  if(firstRender){
+    const sec=cal.querySelector(`.aday[data-date="${ti}"]`);
+    cal.scrollTop=sec&&sec!==cal.querySelector(".aday")?sec.offsetTop-2:0;
+    firstRender=false;
+  }else cal.scrollTop=keep;
+}
 function setMode(m){
   if(m===state.mode)return;
+  if(m!=="month")state.lastWeekMode=m;
+  try{localStorage.setItem("semaine.mode",m);}catch(e){}
+  if(m!=="month"&&state.mode!=="month"){state.mode=m;firstRender=true;render();return;}
   if(m==="month")state.month=firstOf(addDays(state.view,isNarrow()?state.selDay:3));
   else{const t=today0();if(firstOf(t).getTime()===state.month.getTime()){state.view=mondayOf(t);state.selDay=(t.getDay()+6)%7;}else{state.view=mondayOf(state.month);state.selDay=(state.month.getDay()+6)%7;}}
   state.mode=m;firstRender=true;render();
@@ -876,6 +933,7 @@ function renderStrip(){
 }
 function renderGrid(){
   if(state.mode==="month")return renderMonth();
+  if(state.mode==="list")return renderList();
   const cal=$("#cal"),keep=cal.scrollTop;
   const days=isNarrow()?[state.selDay]:[0,1,2,3,4,5,6];
   const w=inWeek(state.view);
@@ -1163,7 +1221,12 @@ $("#copyW").onclick=copyLastWeek;
 $("#addBtn").onclick=()=>{const d=isNarrow()?addDays(state.view,state.selDay):(today0()>=state.view&&today0()<addDays(state.view,7)?today0():state.view);newEventAt(iso(d));};
 $("#strip").onclick=e=>{const b=e.target.closest("button");if(!b)return;state.selDay=+b.dataset.i;renderStrip();renderGrid();};
 $("#cal").onclick=e=>{
-  if(state.mode==="month"){const c=e.target.closest(".mcell");if(c){const d=fromIso(c.dataset.date);state.view=mondayOf(d);state.selDay=(d.getDay()+6)%7;state.month=firstOf(d);state.mode="week";firstRender=true;render();}return;}
+  if(state.mode==="month"){const c=e.target.closest(".mcell");if(c){const d=fromIso(c.dataset.date);state.view=mondayOf(d);state.selDay=(d.getDay()+6)%7;state.month=firstOf(d);state.mode=state.lastWeekMode;try{localStorage.setItem("semaine.mode",state.mode);}catch(e){}firstRender=true;render();}return;}
+  if(state.mode==="list"){
+    const ev=e.target.closest(".aev");if(ev){const x=state.events.find(z=>z.id===ev.dataset.id);if(x)openEdit({...x},false);return;}
+    const ad=e.target.closest(".aadd");if(ad)newEventAt(ad.dataset.date);
+    return;
+  }
   const ev=e.target.closest(".ev");
   if(ev){const x=state.events.find(z=>z.id===ev.dataset.id);if(x)openEdit({...x},false);return;}
   const col=e.target.closest(".col");
@@ -1221,9 +1284,10 @@ $("#sClear").onclick=()=>{
 };
 document.querySelectorAll("dialog").forEach(d=>d.addEventListener("click",e=>{if(e.target===d)d.close();}));
 narrow.addEventListener("change",()=>{firstRender=true;render();});
-setInterval(()=>{checkReminders();if(!document.hidden&&state.mode==="week")renderGrid();},30000);
+setInterval(()=>{checkReminders();if(!document.hidden&&state.mode!=="month")renderGrid();},30000);
 
 /* ================= boot ================= */
+if(state.mode!=="month")state.lastWeekMode=state.mode;
 loadLocal();applyTheme();render();setSync("local");checkReminders();
 initCloud().then(()=>{if(!cloud)initSupabase();});
 })();
