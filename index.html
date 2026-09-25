@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Semaine: classes and shifts</title>
+<title>My Timetable: classes and shifts</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -400,8 +400,8 @@ function saveLocal(){try{localStorage.setItem(LS,JSON.stringify({events:state.ev
 /* ---------- database config (self-hosted) ----------
    Paste your Supabase project URL and anon/public key here.
    Leave empty to keep everything on this device only. */
-const SUPABASE_URL="";
-const SUPABASE_ANON_KEY="";
+const SUPABASE_URL="https://uoevqzzhxghwmupnitsi.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvZXZxenpoeGdod211cG5pdHNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNjg3MTksImV4cCI6MjEwNTk0NDcxOX0.cpugKGCuhc3p1PIEfUMzjPju5DyElvYP2dxG9mDR9B8";
 
 /* ---------- cloud sync ---------- */
 let cloud=null, pending=0;
