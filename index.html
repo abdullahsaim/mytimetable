@@ -38,6 +38,19 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
+.pdfdlg{width:100vw; max-width:100vw; height:100dvh; max-height:100dvh; margin:0; border-radius:0; background:var(--bg)}
+.pdfwrap{display:flex; flex-direction:column; height:100%}
+.pdfbar{flex:none; display:flex; flex-wrap:wrap; align-items:center; gap:8px 10px; padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px; background:var(--surface); border-bottom:1px solid var(--line)}
+.pdfbar h2{font:700 19px var(--display); margin:0 6px 0 0}
+.pdfweek{display:flex; align-items:center; gap:4px; font-weight:600; font-size:14px}
+.pdfweek span{min-width:112px; text-align:center}
+.pdfbar .grow{flex:1}
+.pdfmsg{font-size:13px; color:var(--muted); width:100%; text-align:right}
+.pdfmsg:empty{display:none}
+.pdfstage{flex:1; overflow:auto; padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px)); display:flex; justify-content:center; align-items:flex-start}
+.pdfstage svg{width:min(100%,1120px); height:auto; background:#fff; border-radius:3px; box-shadow:0 2px 6px rgba(10,20,40,.08),0 18px 40px rgba(10,20,40,.14); flex:none}
+.pdfstage.portrait svg{width:min(100%,780px)}
+@media (max-width:720px){.pdfbar h2{width:100%} .pdfbar .grow{display:none} .pdfstage{padding:14px 8px}}
 html{height:100%; scroll-padding-top:env(safe-area-inset-top,0px)}
 body{height:100%; margin:0; background:var(--bg); color:var(--ink); font:15px/1.45 var(--body); display:flex; flex-direction:column; overflow:hidden; -webkit-font-smoothing:antialiased}
 button,input,select{font:inherit; color:inherit}
@@ -284,6 +297,7 @@ dialog::backdrop{background:rgba(10,16,32,.45)}
     <span class="sync" id="sync">Saved on this device</span>
     <button class="btn" id="copyW" title="Copy last week's events into this week"><span class="long">Copy last week</span><span class="short" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg></span></button>
     <button class="icon-btn" id="addBtn" aria-label="Add event"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+    <button class="icon-btn" id="pdfBtn" aria-label="Weekly agenda PDF" title="Weekly agenda PDF"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 12v6M9 15l3 3 3-3"/></svg></button>
     <button class="icon-btn" id="acctBtn" aria-label="Account and sync" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     <button class="icon-btn" id="setBtn" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
   </div>
@@ -362,6 +376,21 @@ dialog::backdrop{background:rgba(10,16,32,.45)}
     <label class="field">Theme<select id="sTheme"><option value="auto">Match device</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
   </div>
   <footer><button class="btn danger left" id="sClear">Clear this week</button><button class="btn" id="sCancel">Cancel</button><button class="btn primary" id="sSave">Save settings</button></footer>
+</div></dialog>
+
+<!-- PDF agenda -->
+<dialog id="pdfDlg" class="pdfdlg"><div class="pdfwrap">
+  <div class="pdfbar">
+    <h2>Weekly agenda</h2>
+    <div class="pdfweek"><button class="icon-btn" id="pdfPrev" aria-label="Previous week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><span id="pdfWeek"></span><button class="icon-btn" id="pdfNext" aria-label="Next week"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button></div>
+    <div class="viewseg" id="pdfOrient" role="group" aria-label="Page orientation"><button data-o="landscape" aria-pressed="true">Landscape</button><button data-o="portrait" aria-pressed="false">Portrait</button></div>
+    <div class="viewseg" id="pdfColor" role="group" aria-label="Colors"><button data-c="name" aria-pressed="true">Color by name</button><button data-c="type" aria-pressed="false">By type</button></div>
+    <span class="grow"></span>
+    <button class="btn" id="pdfClose">Close</button>
+    <button class="btn primary" id="pdfSave">Download PDF</button>
+    <div class="pdfmsg" id="pdfMsg" role="status"></div>
+  </div>
+  <div class="pdfstage" id="pdfStage"></div>
 </div></dialog>
 
 <!-- Account -->
@@ -1152,6 +1181,187 @@ function notifyNote(){
   el.textContent=Notification.permission==="granted"?"System notifications are on. Reminders fire while Semaine is open in a tab.":Notification.permission==="denied"?"Notifications are blocked for this page. Reminders still appear inside Semaine while it's open.":"Reminders appear inside Semaine while it's open. Allow notifications to also get them when the tab is in the background.";
 }
 
+/* ================= weekly agenda (A4 PDF) ================= */
+const PAL=["#3B5BDB","#E8590C","#2F9E44","#7048E8","#D6336C","#F59F00","#1098AD","#A0522D","#AE3EC9","#66A80F","#0B7285"];
+const PRINT_TYPE={class:"#2F54EB",shift:"#D9480F",personal:"#0CA678"};
+const pdfState={week:null,orient:"landscape",color:"name"};
+const pdfSafe=s=>String(s).replace(/[–—]/g,"-").replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/…/g,"...").replace(/[^\x20-\xFF]/g,"").replace(/\s+/g," ").trim();
+const hexToRgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));
+const mixHex=(a,b,t)=>{const x=hexToRgb(a),y=hexToRgb(b);return "#"+x.map((v,i)=>Math.round(v+(y[i]-v)*t).toString(16).padStart(2,"0")).join("");};
+const nameKey=t=>t.trim().toLowerCase();
+function strHash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function nameColors(evs){
+  const names=[...new Set(evs.map(e=>nameKey(e.title)))].sort();const used=new Set(),map={};
+  for(const n of names){let i=strHash(n)%PAL.length,k=0;while(used.has(i)&&k<PAL.length){i=(i+1)%PAL.length;k++;}used.add(i);map[n]=PAL[i];}
+  return map;
+}
+const mctx=document.createElement("canvas").getContext("2d");
+function tw(str,size,bold){mctx.font=`${bold?"bold ":""}${size}px Helvetica, Arial, sans-serif`;return mctx.measureText(str).width*0.35278;}
+function fit(str,size,bold,maxW){
+  if(tw(str,size,bold)<=maxW)return str;
+  let lo=0,hi=str.length;while(lo<hi){const m=(lo+hi+1)>>1;if(tw(str.slice(0,m).trimEnd()+"...",size,bold)<=maxW)lo=m;else hi=m-1;}
+  return lo?str.slice(0,lo).trimEnd()+"...":"";
+}
+function wrap(str,size,bold,maxW,maxLines){
+  const words=str.split(" ");const lines=[];let cur="";
+  for(let i=0;i<words.length;i++){
+    const tryS=cur?cur+" "+words[i]:words[i];
+    if(tw(tryS,size,bold)<=maxW){cur=tryS;continue;}
+    if(cur){lines.push(cur);cur=words[i];}else{lines.push(fit(words[i],size,bold,maxW));cur="";}
+    if(lines.length===maxLines){lines[maxLines-1]=fit(lines[maxLines-1]+" "+[cur].concat(words.slice(i+1)).join(" "),size,bold,maxW);return lines;}
+  }
+  if(cur)lines.push(cur);
+  if(lines.length>maxLines){const rest=lines.slice(maxLines-1).join(" ");lines.length=maxLines-1;lines.push(fit(rest,size,bold,maxW));}
+  return lines;
+}
+function buildAgenda(mon,orient,colorBy){
+  const W=orient==="portrait"?210:297,H=orient==="portrait"?297:210,M=12;
+  const ops=[];const R=(o)=>ops.push(Object.assign({t:"rect"},o)),Ln=(o)=>ops.push(Object.assign({t:"line"},o)),Tx=(x,y,s,size,o={})=>ops.push(Object.assign({t:"text",x,y,s:pdfSafe(s),size,bold:false,color:"#1A1F36",align:"left"},o));
+  const INK="#1A1F36",MUTED="#5E6781",GRID="#E2E6ED",SOFT="#EEF1F5";
+  const a=iso(mon),b=iso(addDays(mon,6));
+  const evs=state.events.filter(e=>e.date>=a&&e.date<=b);
+  const nmap=nameColors(evs);
+  const colorOf=e=>colorBy==="type"?PRINT_TYPE[e.type]:nmap[nameKey(e.title)];
+  const end=addDays(mon,6);
+  // header
+  Tx(M,M+3,"WEEKLY AGENDA",7,{color:MUTED,bold:true});
+  const title=mon.getMonth()===end.getMonth()?`${mon.getDate()} - ${end.getDate()} ${MONTHS_FULL[end.getMonth()]} ${end.getFullYear()}`:`${mon.getDate()} ${MONTHS_FULL[mon.getMonth()]} - ${end.getDate()} ${MONTHS_FULL[end.getMonth()]} ${end.getFullYear()}`;
+  Tx(M,M+11,title,orient==="portrait"?16:18,{bold:true,color:INK});
+  const sum=tp=>evs.filter(e=>e.type===tp).reduce((s,e)=>s+e.end-e.start,0);
+  let sx=W-M;
+  const stats=[["class","Classes"],["shift","Work"],["personal","Personal"]].filter(([tp])=>sum(tp)>0||tp!=="personal");
+  for(let i=stats.length-1;i>=0;i--){
+    const [tp,lbl]=stats[i],val=hrs(sum(tp));
+    const vw=tw(val,11,true);Tx(sx,M+11,val,11,{bold:true,align:"right"});sx-=vw+1.6;
+    const lw=tw(lbl,8,false);Tx(sx,M+11,lbl,8,{color:MUTED,align:"right"});sx-=lw+1.8;
+    R({x:sx-2.4,y:M+8.2,w:2.4,h:2.4,r:0.5,fill:PRINT_TYPE[tp]});sx-=2.4+6;
+  }
+  // legend
+  let legend;
+  if(colorBy==="type")legend=[["class","Class"],["shift","Work"],["personal","Personal"]].map(([tp,l])=>({c:PRINT_TYPE[tp],label:l,val:hrs(sum(tp)),n:1})).filter(x=>x.val!=="0h");
+  else{
+    const g={};evs.forEach(e=>{const k=nameKey(e.title);(g[k]=g[k]||{c:nmap[k],label:e.title,min:0,n:0});g[k].min+=e.end-e.start;g[k].n++;});
+    legend=Object.values(g).sort((x,y)=>y.min-x.min).map(x=>({c:x.c,label:x.label,val:hrs(x.min),n:x.n}));
+  }
+  const items=[];let lx=M,rowsN=legend.length?1:0;const maxX=W-M;
+  for(const it of legend){
+    const label=fit(pdfSafe(it.label),7.5,false,60);const wItem=3.2+1.6+tw(label,7.5,false)+1.4+tw(it.val,7.5,true)+6;
+    if(lx+wItem>maxX&&lx>M){rowsN++;lx=M;}
+    items.push({...it,label,x:lx,row:rowsN-1});lx+=wItem;
+  }
+  const footY=H-7.5,legendBottom=H-13,rowH=5.2;
+  const legendTop=legendBottom-rowsN*rowH;
+  items.forEach(it=>{const y=legendTop+it.row*rowH+3.6;R({x:it.x,y:y-2.6,w:3.2,h:3.2,r:0.7,fill:it.c});let x=it.x+4.8;Tx(x,y,it.label,7.5,{color:INK});x+=tw(it.label,7.5,false)+1.4;Tx(x,y,it.val,7.5,{bold:true,color:MUTED});});
+  Ln({x1:M,y1:H-12,x2:W-M,y2:H-12,stroke:GRID,sw:0.2});
+  Tx(M,footY,"Semaine",7,{bold:true,color:MUTED});
+  const now=new Date();Tx(W-M,footY,`Printed ${now.getDate()} ${MONS[now.getMonth()]} ${now.getFullYear()}`,7,{color:MUTED,align:"right"});
+  // grid
+  const gy=M+18,dh=9,timeW=11;
+  const gb=(rowsN?legendTop-4:H-17);
+  let sH=8,eH=20;evs.forEach(e=>{sH=Math.min(sH,Math.floor(e.start/60));eH=Math.max(eH,Math.ceil(e.end/60));});eH=Math.min(24,eH);
+  const top=gy+dh,hourH=(gb-top)/(eH-sH);
+  const gx=M+timeW,colW=(W-M-gx)/7;
+  for(let i=5;i<7;i++)R({x:gx+i*colW,y:top,w:colW,h:gb-top,fill:"#F7F8FA"});
+  for(let hh=sH;hh<=eH;hh++){
+    const y=top+(hh-sH)*hourH;Ln({x1:gx,y1:y,x2:W-M,y2:y,stroke:GRID,sw:0.2});
+    if(hh<eH){if(hourH>=6)Ln({x1:gx,y1:y+hourH/2,x2:W-M,y2:y+hourH/2,stroke:SOFT,sw:0.15,dash:[0.8,0.8]});
+      Tx(gx-1.6,y+2.4,state.settings.clock==="12"?`${((hh+11)%12)+1}${hh<12?"am":"pm"}`:`${pad(hh)}:00`,6.3,{color:MUTED,align:"right"});}
+  }
+  for(let i=0;i<=7;i++)Ln({x1:gx+i*colW,y1:gy,x2:gx+i*colW,y2:gb,stroke:GRID,sw:0.2});
+  Ln({x1:gx,y1:gy,x2:W-M,y2:gy,stroke:GRID,sw:0.2});
+  for(let i=0;i<7;i++){
+    const d=addDays(mon,i),di=iso(d),dayEvs=evs.filter(e=>e.date===di);
+    const x=gx+i*colW;
+    Tx(x+2,gy+6,DNS[i],8,{bold:true,color:INK});
+    Tx(x+2+tw(DNS[i],8,true)+1.4,gy+6,`${d.getDate()} ${MONS[d.getMonth()]}`,7.5,{color:MUTED});
+    const tot=dayEvs.reduce((s,e)=>s+e.end-e.start,0);
+    if(tot&&colW>24)Tx(x+colW-1.8,gy+6,hrs(tot),6.5,{color:MUTED,align:"right"});
+    for(const {e,lane,n} of layoutDay(dayEvs)){
+      const c=colorOf(e),clash=dayEvs.some(o=>o!==e&&overlaps(o,e));
+      const innerW=colW-1.6,ew=innerW/n-(n>1?0.6:0),ex=x+0.8+lane*(innerW/n);
+      const ey=top+(e.start-sH*60)/60*hourH+0.3,eh=Math.max(3.6,(e.end-e.start)/60*hourH-0.6);
+      R({x:ex,y:ey,w:ew,h:eh,r:1.1,fill:mixHex(c,"#FFFFFF",0.84),stroke:clash?"#E03131":mixHex(c,"#FFFFFF",0.5),sw:clash?0.45:0.2});
+      R({x:ex,y:ey,w:1.1,h:eh,r:0.5,fill:c});
+      const tx=ex+2.3,avail=ew-3.1,dark=mixHex(c,"#000000",0.35);
+      const time=`${fmtT(e.start)}-${fmtT(e.end)}`;
+      if(eh<6.4){
+        const lead=fmtT(e.start)+" ";Tx(tx,ey+eh/2+1.1,lead,6,{bold:true,color:dark});
+        Tx(tx+tw(lead,6,true),ey+eh/2+1.1,fit(pdfSafe(e.title),6.4,true,Math.max(0,avail-tw(lead,6,true))),6.4,{bold:true,color:INK});
+        continue;
+      }
+      const lh=2.8;let y=ey+3.1;
+      const spare=Math.floor((eh-3.4)/lh);
+      const extra=(e.location?1:0)+1;
+      const tLines=wrap(pdfSafe(e.title),7,true,avail,Math.max(1,Math.min(3,spare-extra)));
+      for(const l of tLines){Tx(tx,y,l,7,{bold:true,color:INK});y+=lh;}
+      if(y-ey<=eh-0.6){Tx(tx,y,fit(time,6,false,avail),6,{color:dark});y+=lh-0.2;}
+      if(e.location&&y-ey<=eh-0.6)Tx(tx,y,fit(pdfSafe(e.location),6,false,avail),6,{color:MUTED});
+    }
+  }
+  R({x:M,y:gy,w:W-2*M,h:gb-gy,r:1.8,stroke:"#D5DAE3",sw:0.3});
+  if(!evs.length)Tx(W/2,top+(gb-top)/2,"Nothing planned this week",10,{color:MUTED,align:"middle"});
+  return {W,H,ops};
+}
+function agendaSVG(L){
+  const out=[`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${L.W} ${L.H}" role="img" aria-label="Weekly agenda preview"><rect width="${L.W}" height="${L.H}" fill="#fff"/>`];
+  for(const o of L.ops){
+    if(o.t==="rect")out.push(`<rect x="${o.x}" y="${o.y}" width="${o.w}" height="${o.h}" rx="${o.r||0}" fill="${o.fill||"none"}"${o.stroke?` stroke="${o.stroke}" stroke-width="${o.sw}"`:""}/>`);
+    else if(o.t==="line")out.push(`<line x1="${o.x1}" y1="${o.y1}" x2="${o.x2}" y2="${o.y2}" stroke="${o.stroke}" stroke-width="${o.sw}"${o.dash?` stroke-dasharray="${o.dash.join(" ")}"`:""}/>`);
+    else out.push(`<text x="${o.x}" y="${o.y}" font-family="Helvetica, Arial, sans-serif" font-size="${(o.size*0.35278).toFixed(3)}" font-weight="${o.bold?700:400}" fill="${o.color}" text-anchor="${o.align==="right"?"end":o.align==="middle"?"middle":"start"}">${esc(o.s)}</text>`);
+  }
+  out.push("</svg>");return out.join("");
+}
+function agendaPDF(L){
+  const doc=new window.jspdf.jsPDF({orientation:L.W>L.H?"landscape":"portrait",unit:"mm",format:"a4"});
+  for(const o of L.ops){
+    if(o.t==="rect"){
+      const st=o.fill&&o.stroke?"FD":o.fill?"F":"S";
+      if(o.fill)doc.setFillColor(o.fill);
+      if(o.stroke){doc.setDrawColor(o.stroke);doc.setLineWidth(o.sw);}
+      if(o.r)doc.roundedRect(o.x,o.y,o.w,o.h,Math.min(o.r,o.w/2,o.h/2),Math.min(o.r,o.w/2,o.h/2),st);else doc.rect(o.x,o.y,o.w,o.h,st);
+    }else if(o.t==="line"){
+      doc.setDrawColor(o.stroke);doc.setLineWidth(o.sw);doc.setLineDashPattern(o.dash||[],0);doc.line(o.x1,o.y1,o.x2,o.y2);doc.setLineDashPattern([],0);
+    }else{
+      if(!o.s)continue;
+      doc.setFont("helvetica",o.bold?"bold":"normal");doc.setFontSize(o.size);doc.setTextColor(o.color);
+      doc.text(o.s,o.x,o.y,{align:o.align==="middle"?"center":o.align});
+    }
+  }
+  doc.setProperties({title:"Weekly agenda",creator:"Semaine"});
+  return doc;
+}
+function renderPdfPreview(){
+  const mon=pdfState.week,end=addDays(mon,6);
+  $("#pdfWeek").textContent=`${mon.getDate()} ${MONS[mon.getMonth()]} - ${end.getDate()} ${MONS[end.getMonth()]}`;
+  document.querySelectorAll("#pdfOrient button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.o===pdfState.orient)));
+  document.querySelectorAll("#pdfColor button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.c===pdfState.color)));
+  const st=$("#pdfStage");st.classList.toggle("portrait",pdfState.orient==="portrait");
+  st.innerHTML=agendaSVG(buildAgenda(mon,pdfState.orient,pdfState.color));
+}
+function openPdf(){
+  pdfState.week=state.mode==="month"?mondayOf(state.month.getMonth()===today0().getMonth()?today0():state.month):state.view;
+  try{const o=JSON.parse(localStorage.getItem("semaine.pdf")||"{}");if(o.orient)pdfState.orient=o.orient;if(o.color)pdfState.color=o.color;}catch(e){}
+  $("#pdfMsg").textContent="";renderPdfPreview();$("#pdfDlg").showModal();$("#pdfSave").focus();
+}
+function savePdfPrefs(){try{localStorage.setItem("semaine.pdf",JSON.stringify({orient:pdfState.orient,color:pdfState.color}));}catch(e){}}
+async function downloadPdf(){
+  const btn=$("#pdfSave"),msg=$("#pdfMsg");btn.disabled=true;msg.textContent="Preparing PDF…";
+  try{
+    if(!window.jspdf)await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+    const doc=agendaPDF(buildAgenda(pdfState.week,pdfState.orient,pdfState.color));
+    const blob=doc.output("blob"),name=`agenda-${iso(pdfState.week)}.pdf`;
+    let dl=null;try{if(window.claude&&typeof window.claude.use==="function")dl=await window.claude.use("downloads");}catch(e){}
+    if(dl){
+      try{await dl.save({filename:name,data:blob});msg.textContent="PDF saved.";}
+      catch(e){msg.textContent=e&&e.code==="declined"?"":"Couldn't save the PDF here. Try the self-hosted version.";}
+    }else{
+      const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url),5000);msg.textContent="PDF downloaded.";
+    }
+  }catch(e){console.warn(e);msg.textContent="Couldn't create the PDF. Check your connection and try again.";}
+  finally{btn.disabled=false;}
+}
+
 /* ================= voice ================= */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let rec=null,listening=false,silenceT=null,heardFinal="";
@@ -1265,6 +1475,13 @@ $("#setBtn").onclick=()=>{
   $("#setDlg").showModal();
 };
 $("#sNotify").onclick=async()=>{try{await Notification.requestPermission();}catch(e){}notifyNote();};
+$("#pdfBtn").onclick=openPdf;
+$("#pdfClose").onclick=()=>$("#pdfDlg").close();
+$("#pdfSave").onclick=downloadPdf;
+$("#pdfPrev").onclick=()=>{pdfState.week=addDays(pdfState.week,-7);renderPdfPreview();};
+$("#pdfNext").onclick=()=>{pdfState.week=addDays(pdfState.week,7);renderPdfPreview();};
+$("#pdfOrient").onclick=e=>{const b=e.target.closest("button");if(!b)return;pdfState.orient=b.dataset.o;savePdfPrefs();renderPdfPreview();};
+$("#pdfColor").onclick=e=>{const b=e.target.closest("button");if(!b)return;pdfState.color=b.dataset.c;savePdfPrefs();renderPdfPreview();};
 $("#acctBtn").onclick=()=>{renderAcct();$("#aMsg").textContent="";$("#acctDlg").showModal();};
 $("#aSignIn").onclick=()=>acctAuth(false);
 $("#aUp").onclick=()=>acctAuth(true);
