@@ -1,4 +1,4 @@
--- Semaine database setup
+-- Cadence database setup
 -- Run once in Supabase: SQL Editor > New query > paste > Run
 
 create table if not exists public.events (

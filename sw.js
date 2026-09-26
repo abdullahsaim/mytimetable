@@ -1,5 +1,5 @@
-// Semaine service worker: offline app shell + notification clicks.
-const CACHE = "semaine-v6";
+// Cadence service worker: offline app shell + notification clicks.
+const CACHE = "cadence-v8";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 const CDN = /(^|\.)(cdnjs\.cloudflare\.com|cdn\.jsdelivr\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)$/;
 

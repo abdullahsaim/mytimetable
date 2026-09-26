@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Semaine: classes and shifts</title>
+<title>Cadence: classes, shifts and life</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#16213A">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Semaine">
+<meta name="apple-mobile-web-app-title" content="Cadence">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,6 +45,188 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
+/* splash */
+#splash{position:fixed; inset:0; z-index:100; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:radial-gradient(120% 80% at 50% 0%,#23345C 0%,#111A2E 58%,#0A101E 100%); color:#F2F4F9; transition:opacity .55s ease, visibility .55s}
+#splash.gone{opacity:0; visibility:hidden}
+.mark{width:88px; height:88px; border-radius:24px; background:#F2F4F9; position:relative; overflow:hidden; box-shadow:0 22px 54px rgba(0,0,0,.38); flex:none}
+.mark::before{content:""; position:absolute; left:0; right:0; top:0; height:19px; background:#D3343A}
+.mark i{position:absolute; width:19px; border-radius:5px; background:var(--c); left:var(--x); top:var(--y); height:var(--h); transform-origin:50% 0; animation:beat 1.3s ease-in-out infinite; animation-delay:var(--d)}
+@keyframes beat{0%,100%{transform:scaleY(1)} 50%{transform:scaleY(.5)}}
+.sp-word{font:700 36px/1 var(--display); letter-spacing:-.025em; margin-top:10px; opacity:0; animation:rise .6s .12s forwards}
+.sp-tag{font-size:14.5px; color:#9AA6C0; opacity:0; animation:rise .6s .28s forwards}
+.sp-bar{width:128px; height:3px; border-radius:3px; background:rgba(255,255,255,.12); overflow:hidden; margin-top:14px}
+.sp-bar span{display:block; height:100%; width:40%; border-radius:3px; background:linear-gradient(90deg,#6E8BFF,#F0B03C,#3CC4A6); animation:load 1.1s ease-in-out infinite}
+@keyframes load{from{transform:translateX(-110%)} to{transform:translateX(280%)}}
+@keyframes rise{from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:none}}
+
+/* auth */
+#authDlg{width:min(900px,calc(100vw - 32px)); height:min(600px,calc(100dvh - 32px)); max-width:none; max-height:none; border-radius:26px; background:var(--surface); overflow:hidden}
+#authDlg::backdrop{background:rgba(8,13,26,.78); backdrop-filter:blur(6px)}
+.auth{display:grid; grid-template-columns:1fr 1.08fr; height:100%}
+.auth-brand{position:relative; overflow:hidden; color:#F2F4F9; padding:34px 34px 30px; display:flex; flex-direction:column;
+  background:radial-gradient(90% 70% at 15% 5%,rgba(59,91,219,.45),transparent 70%),radial-gradient(70% 60% at 95% 100%,rgba(224,152,27,.28),transparent 70%),#121B31}
+.auth-brand::before{content:""; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px); background-size:18px 18px}
+.auth-brand > *{position:relative}
+.auth-logo{display:flex; align-items:center; gap:10px; font:700 20px var(--display)}
+.auth-logo .mark{width:34px; height:34px; border-radius:10px; box-shadow:none}
+.auth-logo .mark::before{height:8px}
+.auth-logo .mark i{width:7px; border-radius:2px; animation:none}
+.auth-hero{margin:auto 0; padding:26px 0}
+.auth-hero .mark{margin-bottom:22px}
+.auth-hero h3{font:700 clamp(24px,2.8vw,30px)/1.12 var(--display); letter-spacing:-.02em; margin:0 0 18px; max-width:15ch}
+.perks{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px}
+.perks li{display:flex; gap:12px; align-items:flex-start; font-size:14.5px; line-height:1.45; color:#C9D2E6}
+.perks li b{color:#F2F4F9; display:block; font-weight:600}
+.perks .ic{width:30px; height:30px; flex:none; border-radius:9px; display:grid; place-items:center; background:rgba(255,255,255,.1); font-size:15px}
+.auth-main{display:flex; flex-direction:column; padding:30px 40px 22px; overflow:auto; min-height:0}
+.auth-tabs{display:flex; background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:3px; margin-bottom:22px}
+.auth-tabs button{flex:1; height:36px; border:0; border-radius:9px; background:transparent; font-weight:600; font-size:14px; color:var(--muted)}
+.auth-tabs button[aria-selected="true"]{background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(10,20,40,.12)}
+.auth-main h2{font:700 27px/1.15 var(--display); letter-spacing:-.02em; margin:0 0 6px}
+.auth-sub{color:var(--muted); font-size:14.5px; margin:0 0 20px; line-height:1.5}
+.auth-form .field{margin-bottom:14px}
+.pw{position:relative}
+.pw input{padding-right:64px}
+.pw button{position:absolute; right:6px; top:50%; transform:translateY(-50%); height:30px; padding:0 10px; border:0; border-radius:8px; background:transparent; color:var(--muted); font-weight:600; font-size:13px}
+.pw button:hover{background:var(--line-soft)}
+.auth-row{display:flex; justify-content:space-between; align-items:center; margin:-4px 0 16px; font-size:13px; color:var(--muted)}
+.linkbtn{border:0; background:none; padding:0; color:var(--class); font-weight:600; font-size:13.5px; cursor:pointer}
+.linkbtn:hover{text-decoration:underline}
+.auth-go{width:100%; height:46px; border-radius:12px; font-size:15.5px}
+.auth-go[aria-busy="true"]{opacity:.7; pointer-events:none}
+.or{display:flex; align-items:center; gap:10px; color:var(--muted); font-size:12.5px; margin:16px 0}
+.or::before,.or::after{content:""; flex:1; border-top:1px solid var(--line)}
+.gbtn{width:100%; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; gap:10px}
+.auth-err{min-height:20px; font-size:13.5px; color:var(--clash); margin:0 0 10px; font-weight:500}
+.auth-err.ok{color:var(--personal)}
+.auth-skip{margin-top:auto; padding-top:18px; text-align:center; font-size:13.5px; color:var(--muted)}
+.auth-skip .linkbtn{color:var(--muted); text-decoration:underline}
+.meter{display:flex; gap:4px; margin-top:6px}
+.meter i{flex:1; height:4px; border-radius:4px; background:var(--line)}
+.meter[data-s="1"] i:nth-child(-n+1){background:var(--clash)}
+.meter[data-s="2"] i:nth-child(-n+2){background:var(--shift)}
+.meter[data-s="3"] i:nth-child(-n+3){background:var(--personal)}
+.meter[data-s="4"] i{background:var(--personal)}
+.mailbox{font-size:54px; line-height:1; margin:6px 0 14px}
+@media (max-width:720px){
+  #authDlg{width:100vw; height:100dvh; border-radius:0}
+  .auth{grid-template-columns:1fr; grid-template-rows:auto 1fr}
+  .auth-brand{padding:calc(18px + env(safe-area-inset-top,0px)) 22px 18px}
+  .auth-hero,.perks{display:none}
+  .auth-main{padding:22px 22px calc(18px + env(safe-area-inset-bottom,0px))}
+  .auth-main h2{font-size:25px}
+}
+
+/* onboarding */
+#onb{width:min(940px,calc(100vw - 32px)); height:min(620px,calc(100dvh - 32px)); max-width:none; max-height:none; border-radius:26px; background:var(--surface); overflow:hidden}
+#onb::backdrop{background:rgba(8,13,26,.72); backdrop-filter:blur(6px)}
+.onb{display:flex; flex-direction:column; height:100%}
+.onb-track{flex:1; position:relative; overflow:hidden; touch-action:pan-y}
+.onb-slide{position:absolute; inset:0; display:grid; grid-template-columns:1.08fr 1fr; opacity:0; visibility:hidden; transform:translateX(36px); transition:opacity .45s ease, transform .5s cubic-bezier(.2,.8,.2,1), visibility .45s}
+.onb-slide.active{opacity:1; visibility:visible; transform:none}
+.onb-slide.before{transform:translateX(-36px)}
+.onb-art{position:relative; overflow:hidden; display:grid; place-items:center; padding:28px; color:#F2F4F9;
+  background:radial-gradient(90% 70% at 20% 10%,color-mix(in srgb,var(--glow) 40%,transparent),transparent 70%),radial-gradient(70% 60% at 90% 100%,color-mix(in srgb,var(--glow2) 30%,transparent),transparent 70%),#121B31}
+.onb-art::before{content:""; position:absolute; inset:0; background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px); background-size:18px 18px}
+.onb-art > *{position:relative; min-width:0; max-width:100%}
+.onb-copy{padding:44px 40px 20px; display:flex; flex-direction:column; justify-content:center; min-height:0; overflow:auto}
+.onb-kicker{font-size:12.5px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--class); margin:0 0 10px}
+.onb-copy h2{font:700 clamp(26px,3.4vw,36px)/1.08 var(--display); letter-spacing:-.025em; margin:0 0 14px}
+.onb-copy p{color:var(--muted); font-size:15.5px; line-height:1.55; margin:0 0 14px; max-width:40ch}
+.onb-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:4px}
+.onb-chips span{font-size:13px; padding:6px 10px; border-radius:999px; background:var(--surface-2); border:1px solid var(--line); color:var(--ink)}
+.onb-foot{flex:none; display:flex; align-items:center; gap:12px; padding:14px 22px calc(16px + env(safe-area-inset-bottom,0px)); border-top:1px solid var(--line-soft)}
+.onb-dots{display:flex; gap:6px; flex:1}
+.onb-dots button{width:8px; height:8px; border-radius:8px; border:0; padding:0; background:var(--line); transition:width .3s, background .3s}
+.onb-dots button[aria-current="step"]{width:26px; background:var(--ink)}
+.onb-skip{position:absolute; top:14px; right:14px; z-index:5; height:32px; padding:0 12px; border-radius:999px; border:1px solid rgba(255,255,255,.22); background:rgba(10,16,32,.35); color:#F2F4F9; font-weight:600; font-size:13px; backdrop-filter:blur(6px)}
+.onb-brand{position:absolute; top:16px; left:18px; z-index:5; display:flex; align-items:center; gap:8px; color:#F2F4F9; font:700 16px var(--display)}
+.onb-brand .mark{width:26px; height:26px; border-radius:8px; box-shadow:none}
+.onb-brand .mark::before{height:6px}
+.onb-brand .mark i{width:6px; border-radius:2px; animation:none}
+/* illustrations */
+.ill-card{background:#F7F8FB; color:#16213A; border-radius:16px; box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.mw{width:min(330px,100%); padding:14px}
+.mw-h{display:grid; grid-template-columns:repeat(7,1fr); gap:5px; font-size:10px; font-weight:700; color:#6A7490; margin-bottom:8px; text-align:center}
+.mw-g{display:grid; grid-template-columns:repeat(7,1fr); gap:5px; height:190px}
+.mw-c{position:relative; background:repeating-linear-gradient(#EEF1F5 0 1px,transparent 1px 27px); border-radius:6px}
+.mw-c b{position:absolute; left:2px; right:2px; border-radius:5px; background:var(--c); opacity:0; transform:scale(.6); transform-origin:50% 0}
+.active .mw-c b{animation:pop .5s cubic-bezier(.3,1.5,.5,1) forwards; animation-delay:var(--d)}
+@keyframes pop{to{opacity:1; transform:none}}
+.say-pill{display:flex; align-items:center; gap:10px; background:#F2F4F9; color:#16213A; border-radius:28px; padding:8px 18px 8px 8px; width:min(360px,100%); box-shadow:0 18px 44px rgba(0,0,0,.35)}
+.say-pill .m{width:40px; height:40px; border-radius:50%; background:#D3343A; display:grid; place-items:center; flex:none; position:relative}
+.say-pill .m::after{content:""; position:absolute; inset:-5px; border-radius:50%; border:2px solid #D3343A; animation:ring 1.4s ease-out infinite}
+.say-pill .m svg{width:18px; height:18px; color:#fff}
+.say-pill .tx{min-width:0; flex:1; font-size:14px; font-weight:600; line-height:1.35; min-height:2.7em; display:flex; align-items:center}
+.say-pill .tx::after{content:""; display:inline-block; width:2px; height:15px; background:#16213A; margin-left:2px; vertical-align:-2px; animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.drafts-ill{display:flex; flex-direction:column; gap:8px; width:min(340px,100%); margin-top:16px}
+.drafts-ill div{background:#F7F8FB; color:#16213A; border-radius:12px; padding:10px 12px; border-left:4px solid var(--c); font-size:13.5px; display:flex; justify-content:space-between; gap:10px; opacity:0; transform:translateY(10px); transition:.4s}
+.drafts-ill div.in{opacity:1; transform:none}
+.drafts-ill b{font-weight:700} .drafts-ill span{color:#6A7490; font-variant-numeric:tabular-nums}
+.fan{position:relative; width:min(340px,100%); height:260px}
+.fan .ill-card{position:absolute; width:62%; padding:12px; font-size:11px}
+.fan .ill-card h4{margin:0 0 8px; font:700 13px var(--display)}
+.fan .f1{left:0; top:26px; transform:rotate(-7deg)} .fan .f3{right:0; top:26px; transform:rotate(7deg)} .fan .f2{left:19%; top:0; z-index:2}
+.li{display:flex; gap:8px; align-items:center; padding:6px 7px; border-radius:8px; margin-bottom:5px; background:color-mix(in srgb,var(--c) 14%,#fff); border-left:3px solid var(--c)}
+.li.clash{outline:1.5px solid #D3343A}
+.li small{color:#6A7490; margin-left:auto}
+.mm{display:grid; grid-template-columns:repeat(7,1fr); gap:3px}
+.mm i{aspect-ratio:1; border-radius:4px; background:#EEF1F5; position:relative}
+.mm i.e::after{content:""; position:absolute; left:30%; right:30%; bottom:22%; height:3px; border-radius:2px; background:var(--c)}
+.bell{position:absolute; right:6%; bottom:4px; z-index:3; background:#F2F4F9; color:#16213A; border-radius:14px; padding:9px 12px; font-size:12.5px; font-weight:600; box-shadow:0 14px 34px rgba(0,0,0,.35); display:flex; gap:8px; align-items:center}
+.imp{width:min(340px,100%); display:flex; flex-direction:column; gap:12px; align-items:stretch}
+.link-pill{background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); border-radius:12px; padding:10px 12px; font:13px ui-monospace,Menlo,monospace; color:#DCE3F2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.flow{height:28px; display:grid; place-items:center}
+.flow i{width:2px; height:100%; background:repeating-linear-gradient(#9AA6C0 0 4px,transparent 4px 8px); background-size:2px 8px; animation:flowmv .6s linear infinite}
+@keyframes flowmv{to{background-position:0 8px}}
+.imp .ill-card{padding:10px}
+.imp .li{opacity:0; transform:translateX(-8px)}
+.active .imp .li{animation:slidein .4s forwards; animation-delay:var(--d)}
+@keyframes slidein{to{opacity:1; transform:none}}
+.synced{display:flex; align-items:center; gap:6px; font-size:12px; color:#12907A; font-weight:700; margin-top:4px}
+.pay{width:min(330px,100%); padding:16px}
+.pay .amt{font:700 38px/1 var(--display); letter-spacing:-.02em}
+.pay .lbl{font-size:12px; color:#6A7490; font-weight:600}
+.pbars{display:flex; align-items:flex-end; gap:7px; height:96px; margin:14px 0 12px}
+.pbars i{flex:1; border-radius:6px 6px 3px 3px; background:#E0981B; opacity:.5; height:0}
+.pbars i:last-child{opacity:1}
+.active .pbars i{animation:grow .7s cubic-bezier(.2,.8,.2,1) forwards; animation-delay:var(--d)}
+@keyframes grow{to{height:var(--h)}}
+.cap{font-size:12px; color:#6A7490; display:flex; justify-content:space-between; margin-bottom:5px}
+.capbar{height:7px; border-radius:7px; background:#E3E7EE; overflow:hidden}
+.capbar i{display:block; height:100%; width:0; background:#12907A; border-radius:7px}
+.active .capbar i{animation:capw 1s .3s forwards}
+@keyframes capw{to{width:22%}}
+.share{position:relative; width:min(350px,100%); height:280px}
+.bubble{position:absolute; left:0; top:10px; width:74%; background:#DCF8C6; color:#16213A; border-radius:16px 16px 16px 4px; padding:12px 14px; font-size:12.5px; line-height:1.5; box-shadow:0 18px 44px rgba(0,0,0,.35)}
+.bubble b{display:block; margin-bottom:4px}
+.a4{position:absolute; right:0; bottom:0; width:44%; aspect-ratio:1.414; background:#fff; border-radius:4px; padding:8px; box-shadow:0 18px 44px rgba(0,0,0,.4); transform:rotate(4deg)}
+.a4 .g{display:grid; grid-template-columns:repeat(5,1fr); gap:3px; height:100%}
+.a4 .g i{border-radius:3px; background:var(--c); opacity:.85}
+.sunday{position:absolute; left:8%; bottom:0; background:#F2F4F9; color:#16213A; border-radius:14px; padding:9px 12px; font-size:12.5px; font-weight:600; box-shadow:0 14px 34px rgba(0,0,0,.35)}
+.ready{display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center}
+.ready .mark{width:112px; height:112px; border-radius:30px}
+.ready .mark::before{height:24px}
+.ready .mark i{width:24px}
+.ready p{margin:0; font:700 24px var(--display); letter-spacing:-.02em}
+.setup .field{margin-bottom:10px}
+.setup .seg button{height:38px}
+.setup-actions{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
+@media (max-width:720px){
+  #onb{width:100vw; height:100dvh; border-radius:0}
+  .onb-slide{grid-template-columns:1fr; grid-template-rows:minmax(250px,46%) 1fr}
+  .onb-art{padding:52px 18px 18px}
+  .onb-copy{padding:22px 22px 10px; justify-content:flex-start}
+  .onb-copy h2{font-size:27px}
+  .onb-copy p{font-size:15px}
+  .mw-g{height:150px}
+  .fan{height:210px}
+  .share{height:220px}
+  .onb-skip{top:calc(12px + env(safe-area-inset-top,0px))}
+  .onb-brand{top:calc(14px + env(safe-area-inset-top,0px))}
+}
+@media (prefers-reduced-motion:reduce){.onb-slide{transition:none} .mw-c b,.imp .li{opacity:1; transform:none} .pbars i{height:var(--h)} .capbar i{width:22%}}
 .menu{position:fixed; z-index:30; background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:6px; min-width:230px; box-shadow:0 14px 36px rgba(10,20,40,.18)}
 .menu button{display:flex; align-items:center; gap:10px; width:100%; text-align:left; border:0; background:transparent; padding:10px 12px; border-radius:9px; font-weight:600; font-size:14.5px}
 .menu button:hover{background:var(--surface-2)}
@@ -316,6 +498,7 @@ dialog::backdrop{background:rgba(10,16,32,.45)}
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><div class="mark" aria-hidden="true"><i style="--c:#3B5BDB;--x:12px;--y:28px;--h:26px;--d:0s"></i><i style="--c:#E0981B;--x:35px;--y:40px;--h:30px;--d:.15s"></i><i style="--c:#12907A;--x:58px;--y:30px;--h:16px;--d:.3s"></i><i style="--c:#3B5BDB;--x:58px;--y:52px;--h:24px;--d:.45s"></i><i style="--c:#E0981B;--x:12px;--y:60px;--h:18px;--d:.6s"></i></div><div class="sp-word">Cadence</div><div class="sp-tag">Classes, shifts and life, in rhythm.</div><div class="sp-bar"><span></span></div></div>
 
 <header class="top">
   <div class="when">
@@ -411,7 +594,7 @@ dialog::backdrop{background:rgba(10,16,32,.45)}
       <button class="btn" id="sNotify" type="button">Allow notifications</button>
     </div>
     <label class="field">Sunday summary<select id="sSummary"><option value="on">Show next week's summary on Sunday evening</option><option value="off">Off</option></select></label>
-    <p class="note" id="sNotifyNote">Reminders show while Semaine is open in a browser tab.</p>
+    <p class="note" id="sNotifyNote">Reminders show while Cadence is open in a browser tab.</p>
     <label class="field">Theme<select id="sTheme"><option value="auto">Match device</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
   </div>
   <footer><button class="btn danger left" id="sClear">Clear this week</button><button class="btn" id="sCancel">Cancel</button><button class="btn primary" id="sSave">Save settings</button></footer>
@@ -423,8 +606,60 @@ dialog::backdrop{background:rgba(10,16,32,.45)}
   <button role="menuitem" data-tool="earn"><span>💶</span>Earnings</button>
   <button role="menuitem" data-tool="pdf"><span>📄</span>Weekly agenda PDF</button>
   <button role="menuitem" data-tool="import"><span>🎓</span>Import timetable</button>
+  <button role="menuitem" data-tool="tour"><span>✨</span>Welcome tour</button>
   <button role="menuitem" data-tool="install" id="installItem" hidden><span>📲</span>Install app</button>
 </div>
+
+<!-- Onboarding -->
+<dialog id="onb" aria-label="Welcome to Cadence"><div class="onb">
+  <div class="onb-track" id="onbTrack">
+    <div class="onb-brand"><div class="mark" aria-hidden="true"><i style="--c:#3B5BDB;--x:4px;--y:9px;--h:8px"></i><i style="--c:#E0981B;--x:10px;--y:12px;--h:10px"></i><i style="--c:#12907A;--x:16px;--y:9px;--h:6px"></i></div>Cadence</div>
+    <button class="onb-skip" id="onbSkip">Skip tour</button>
+    <section class="onb-slide" data-i="0" aria-hidden="true"><div class="onb-art" style="--glow:#3B5BDB;--glow2:#E0981B"><div class="ill-card mw"><div class="mw-h"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div><div class="mw-g"><div class="mw-c"><b style="--c:#3B5BDB;top:10%;height:26%;--d:0.1s"></b><b style="--c:#E0981B;top:55%;height:20%;--d:0.9s"></b></div><div class="mw-c"><b style="--c:#12907A;top:18%;height:22%;--d:0.25s"></b></div><div class="mw-c"><b style="--c:#3B5BDB;top:10%;height:26%;--d:0.4s"></b><b style="--c:#E0981B;top:38%;height:22%;--d:0.5s"></b></div><div class="mw-c"><b style="--c:#E0981B;top:62%;height:34%;--d:0.65s"></b></div><div class="mw-c"><b style="--c:#3B5BDB;top:30%;height:18%;--d:0.8s"></b><b style="--c:#12907A;top:66%;height:14%;--d:1.0s"></b></div><div class="mw-c"><b style="--c:#E0981B;top:22%;height:48%;--d:1.1s"></b></div><div class="mw-c"></div></div></div></div><div class="onb-copy"><p class="onb-kicker">Welcome to Cadence</p><h2>Your week, in rhythm.</h2><p>Classes, work shifts and the rest of life in one calm timetable that keeps up when your week changes.</p><div class="onb-chips"><span>Here is a 1-minute tour</span></div></div></section><section class="onb-slide" data-i="1" aria-hidden="true"><div class="onb-art" style="--glow:#D3343A;--glow2:#3B5BDB"><div style="width:100%;display:flex;flex-direction:column;align-items:center"><div class="say-pill"><span class="m"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span><span class="tx" id="onbType"></span></div><div class="drafts-ill" id="onbDrafts"><div style="--c:#3B5BDB"><b>Marketing class</b><span>Mon 09:00-12:00</span></div><div style="--c:#E0981B"><b>Shift at Carrefour</b><span>Thu 18:00-23:00</span></div></div></div></div><div class="onb-copy"><p class="onb-kicker">Speak your week</p><h2>Just say it.</h2><p>Tap the mic and talk the way you would to a friend, in English or French. You always see a preview first, so nothing is saved until you confirm.</p><div class="onb-chips"><span>"Delete Friday's shift"</span><span>"Move gym to 8pm"</span><span>"Cours lundi 9h à 12h"</span></div></div></section><section class="onb-slide" data-i="2" aria-hidden="true"><div class="onb-art" style="--glow:#12907A;--glow2:#3B5BDB"><div class="fan"><div class="ill-card f1"><h4>Week</h4><div class="mm"><i class="" style="--c:#3B5BDB"></i><i class="" style="--c:#E0981B"></i><i class="e" style="--c:#12907A"></i><i class="" style="--c:#3B5BDB"></i><i class="e" style="--c:#E0981B"></i><i class="" style="--c:#12907A"></i><i class="" style="--c:#3B5BDB"></i><i class="" style="--c:#E0981B"></i><i class="" style="--c:#12907A"></i><i class="e" style="--c:#3B5BDB"></i><i class="" style="--c:#E0981B"></i><i class="e" style="--c:#12907A"></i><i class="" style="--c:#3B5BDB"></i><i class="" style="--c:#E0981B"></i><i class="" style="--c:#12907A"></i><i class="" style="--c:#3B5BDB"></i><i class="e" style="--c:#E0981B"></i><i class="" style="--c:#12907A"></i><i class="" style="--c:#3B5BDB"></i><i class="e" style="--c:#E0981B"></i><i class="" style="--c:#12907A"></i></div></div><div class="ill-card f3"><h4>Month</h4><div class="mm"><i class="" style="--c:#E0981B"></i><i class="e" style="--c:#3B5BDB"></i><i class="" style="--c:#12907A"></i><i class="" style="--c:#E0981B"></i><i class="" style="--c:#3B5BDB"></i><i class="e" style="--c:#12907A"></i><i class="" style="--c:#E0981B"></i><i class="" style="--c:#3B5BDB"></i><i class="e" style="--c:#12907A"></i><i class="" style="--c:#E0981B"></i><i class="" style="--c:#3B5BDB"></i><i class="" style="--c:#12907A"></i><i class="e" style="--c:#E0981B"></i><i class="" style="--c:#3B5BDB"></i><i class="" style="--c:#12907A"></i><i class="e" style="--c:#E0981B"></i><i class="" style="--c:#3B5BDB"></i><i class="e" style="--c:#12907A"></i><i class="" style="--c:#E0981B"></i><i class="" style="--c:#3B5BDB"></i><i class="" style="--c:#12907A"></i><i class="" style="--c:#E0981B"></i><i class="e" style="--c:#3B5BDB"></i><i class="" style="--c:#12907A"></i><i class="" style="--c:#E0981B"></i><i class="" style="--c:#3B5BDB"></i><i class="e" style="--c:#12907A"></i><i class="" style="--c:#E0981B"></i></div></div><div class="ill-card f2"><h4>List</h4><div class="li" style="--c:#3B5BDB">Marketing class<small>09:00</small></div><div class="li clash" style="--c:#E0981B">Shift at Carrefour<small>11:00</small></div><div class="li" style="--c:#12907A">Gym<small>19:00</small></div></div><div class="bell">🔔 Class in 30 min</div></div></div><div class="onb-copy"><p class="onb-kicker">See it your way</p><h2>Week, List or Month.</h2><p>Use the full grid on your laptop and the scrolling List on your phone. Overlaps are outlined in red, and reminders ping you before each event.</p></div></section><section class="onb-slide" data-i="3" aria-hidden="true"><div class="onb-art" style="--glow:#6E8BFF;--glow2:#12907A"><div class="imp"><div class="link-pill">webcal://ade.univ.fr/…/anonymous_cal.jsp</div><div class="flow"><i></i></div><div class="ill-card"><div class="li" style="--c:#3B5BDB;--d:.2s">CM Macroéconomie<small>08:15</small></div><div class="li" style="--c:#7048E8;--d:.4s">TD Marketing digital<small>14:00</small></div><div class="li" style="--c:#12907A;--d:.6s">Anglais B2<small>16:00</small></div><div class="synced">✓ Synced, updates every few hours</div></div></div></div><div class="onb-copy"><p class="onb-kicker">Classes on autopilot</p><h2>Your timetable fills itself.</h2><p>Paste your ADE, HyperPlanning or Moodle calendar link and your classes stay in sync. You only add your shifts. Find it under Tools, then Import timetable.</p></div></section><section class="onb-slide" data-i="4" aria-hidden="true"><div class="onb-art" style="--glow:#E0981B;--glow2:#12907A"><div class="ill-card pay"><div class="lbl">This week, gross</div><div class="amt">€206</div><div class="pbars"><i style="--h:40%;--d:0.00s"></i><i style="--h:55%;--d:0.07s"></i><i style="--h:30%;--d:0.14s"></i><i style="--h:70%;--d:0.21s"></i><i style="--h:62%;--d:0.28s"></i><i style="--h:48%;--d:0.35s"></i><i style="--h:58%;--d:0.42s"></i><i style="--h:88%;--d:0.49s"></i></div><div class="cap"><span>Work hours this year</span><b>212 of 964h</b></div><div class="capbar"><i></i></div></div></div><div class="onb-copy"><p class="onb-kicker">Hours and pay</p><h2>Know what you earn.</h2><p>Set an hourly rate per workplace to see weekly and monthly pay. A yearly work-hours bar helps you stay within your limit.</p></div></section><section class="onb-slide" data-i="5" aria-hidden="true"><div class="onb-art" style="--glow:#2F9E44;--glow2:#D3343A"><div class="share"><div class="bubble"><b>My availability next week</b>Mon 28: 14:00-22:00<br>Tue 29: all day<br>Wed 30: 08:00-09:30, 13:00-22:00<br>Thu 1: not available</div><div class="a4"><div class="g"><i style="--c:#3B5BDB;opacity:0.85"></i><i style="--c:#fff;opacity:0"></i><i style="--c:#E0981B;opacity:0.85"></i><i style="--c:#12907A;opacity:0.85"></i><i style="--c:#fff;opacity:0"></i><i style="--c:#E0981B;opacity:0.85"></i><i style="--c:#3B5BDB;opacity:0.85"></i><i style="--c:#fff;opacity:0"></i><i style="--c:#3B5BDB;opacity:0.85"></i><i style="--c:#E0981B;opacity:0.85"></i><i style="--c:#fff;opacity:0"></i><i style="--c:#12907A;opacity:0.85"></i><i style="--c:#E0981B;opacity:0.85"></i><i style="--c:#fff;opacity:0"></i><i style="--c:#3B5BDB;opacity:0.85"></i></div></div><div class="sunday">🗓️ Sunday: next week at a glance</div></div></div><div class="onb-copy"><p class="onb-kicker">Share and plan ahead</p><h2>One tap to share.</h2><p>Send your free slots to your manager on WhatsApp, download a colour-coded A4 agenda, and get a summary of next week every Sunday evening.</p></div></section><section class="onb-slide" data-i="6" aria-hidden="true"><div class="onb-art" style="--glow:#3B5BDB;--glow2:#E0981B"><div class="ready"><div class="mark" aria-hidden="true"><i style="--c:#3B5BDB;--x:16px;--y:36px;--h:34px;--d:0s"></i><i style="--c:#E0981B;--x:45px;--y:52px;--h:38px;--d:.15s"></i><i style="--c:#12907A;--x:74px;--y:38px;--h:20px;--d:.3s"></i><i style="--c:#3B5BDB;--x:74px;--y:66px;--h:30px;--d:.45s"></i><i style="--c:#E0981B;--x:16px;--y:78px;--h:22px;--d:.6s"></i></div><p>You're all set.</p></div></div><div class="onb-copy setup"><p class="onb-kicker">Make it yours</p><h2>Quick setup</h2>
+<div class="field" role="group" aria-label="Voice language">Voice language<div class="seg" id="obLang"><button type="button" data-v="en-US" style="--c:var(--class)">English</button><button type="button" data-v="fr-FR" style="--c:var(--class)">Français</button></div></div>
+<div class="field" role="group" aria-label="Clock">Clock<div class="seg" id="obClock"><button type="button" data-v="24" style="--c:var(--class)">24-hour</button><button type="button" data-v="12" style="--c:var(--class)">12-hour</button></div></div>
+<label class="field">Hourly pay, € gross (optional)<input id="obRate" type="number" min="0" step="0.01" inputmode="decimal" placeholder="e.g. 12.00"></label>
+<div class="setup-actions"><button class="btn" type="button" id="obNotify">🔔 Allow reminders</button><button class="btn" type="button" id="obInstall" hidden>📲 Install app</button></div>
+<p class="note" id="obMsg" style="margin-top:10px"></p></div></section>
+  </div>
+  <div class="onb-foot"><div class="onb-dots" id="onbDots"></div><button class="btn" id="onbBack">Back</button><button class="btn primary" id="onbNext">Next</button></div>
+</div></dialog>
+
+<!-- Sign in / create account -->
+<dialog id="authDlg" aria-labelledby="authTitle"><div class="auth">
+  <aside class="auth-brand">
+    <div class="auth-logo"><div class="mark" aria-hidden="true"><i style="--c:#3B5BDB;--x:4px;--y:9px;--h:8px"></i><i style="--c:#E0981B;--x:10px;--y:12px;--h:10px"></i><i style="--c:#12907A;--x:16px;--y:9px;--h:6px"></i></div>Cadence</div>
+    <div class="auth-hero"><div class="mark" aria-hidden="true"><i style="--c:#3B5BDB;--x:12px;--y:28px;--h:26px;--d:0s"></i><i style="--c:#E0981B;--x:35px;--y:40px;--h:30px;--d:.15s"></i><i style="--c:#12907A;--x:58px;--y:30px;--h:16px;--d:.3s"></i><i style="--c:#3B5BDB;--x:58px;--y:52px;--h:24px;--d:.45s"></i><i style="--c:#E0981B;--x:12px;--y:60px;--h:18px;--d:.6s"></i></div><h3>One timetable, on every device.</h3>
+      <ul class="perks">
+        <li><span class="ic">🔄</span><span><b>Syncs phone and laptop</b>Add a shift on your phone, see it on your laptop a second later.</span></li>
+        <li><span class="ic">🔒</span><span><b>Private by design</b>Only your account can read your timetable.</span></li>
+        <li><span class="ic">📶</span><span><b>Works offline</b>Changes save on your device and sync when you're back online.</span></li>
+      </ul>
+    </div>
+  </aside>
+  <main class="auth-main">
+    <div class="auth-tabs" role="tablist" id="authTabs"><button role="tab" data-m="signup" aria-selected="true">Create account</button><button role="tab" data-m="signin" aria-selected="false">Sign in</button></div>
+    <h2 id="authTitle">Create your account</h2>
+    <p class="auth-sub" id="authSub"></p>
+    <div class="auth-form" id="authForm">
+      <label class="field" id="fName">Your name<input id="auName" type="text" autocomplete="name" placeholder="Optional"></label>
+      <label class="field" id="fEmail">Email<input id="auEmail" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com"></label>
+      <div class="field" id="fPass"><label for="auPass">Password</label><div class="pw"><input id="auPass" type="password" autocomplete="new-password" placeholder="At least 8 characters"><button type="button" id="auShow" aria-label="Show password">Show</button></div><div class="meter" id="auMeter" data-s="0" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+      <div class="auth-row" id="authRow"><span id="authHint"></span><button type="button" class="linkbtn" id="auForgot">Forgot password?</button></div>
+      <p class="auth-err" id="auErr" role="alert"></p>
+      <button class="btn primary auth-go" id="auGo" type="button">Create account</button>
+      <div id="gWrap" hidden><div class="or">or</div><button class="btn gbtn" id="auGoogle" type="button"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.2l7.8 6.1C12.3 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17.5z"/><path fill="#FBBC05" d="M10.4 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.3.8-4.7l-7.8-6.1C1 16.5 0 20.1 0 24s1 7.5 2.6 10.8l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.7-4.1-13.6-9.8l-7.8 6.1C6.6 42.6 14.6 48 24 48z"/></svg>Continue with Google</button></div>
+    </div>
+    <div id="authMail" hidden>
+      <div class="mailbox" aria-hidden="true">📬</div>
+      <p class="auth-sub" id="mailText"></p>
+      <p class="auth-err" id="mailMsg" role="status"></p>
+      <button class="btn primary auth-go" id="mailSignin" type="button">I've confirmed, sign me in</button>
+      <p style="text-align:center;margin-top:14px"><button class="linkbtn" id="mailResend" type="button">Resend email</button></p>
+    </div>
+    <div class="auth-skip" id="authSkipWrap"><button class="linkbtn" id="authSkip" type="button">Continue without an account</button><br>Your timetable stays on this device only.</div>
+  </main>
+</div></dialog>
 
 <!-- Summary -->
 <dialog id="sumDlg"><div class="dlg">
@@ -576,6 +811,8 @@ function saveLocal(){try{localStorage.setItem(LS,JSON.stringify({events:state.ev
    Leave empty to keep everything on this device only. */
 const SUPABASE_URL="https://uoevqzzhxghwmupnitsi.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvZXZxenpoeGdod211cG5pdHNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNjg3MTksImV4cCI6MjEwNTk0NDcxOX0.cpugKGCuhc3p1PIEfUMzjPju5DyElvYP2dxG9mDR9B8";
+/* Set to true after enabling Google in Supabase > Authentication > Providers. */
+const AUTH_GOOGLE=false;
 
 /* ---------- cloud sync ---------- */
 let cloud=null, pending=0;
@@ -632,14 +869,18 @@ async function fetchAllEvents(){
   }
   return out;
 }
+let sbReadyDone;const sbReady=new Promise(r=>{sbReadyDone=r;});
 async function initSupabase(){
-  if(!SUPABASE_URL||!SUPABASE_ANON_KEY)return;
+  if(!SUPABASE_URL||!SUPABASE_ANON_KEY){sbReadyDone();return;}
   $("#acctBtn").hidden=false;setSync("signedout");
   try{await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js");}
-  catch(e){setSync("error");return;}
+  catch(e){setSync("error");sbReadyDone();return;}
   sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   sb.auth.onAuthStateChange((event,session)=>{
+    sbReadyDone();
+    if(event==="PASSWORD_RECOVERY")setTimeout(()=>openAuth("reset"),0);
     const u=session?session.user:null;
+    if(u&&$("#authDlg").open&&authMode!=="reset")setTimeout(()=>closeAuth(`Welcome${u.user_metadata&&u.user_metadata.name?", "+u.user_metadata.name.split(" ")[0]:""}! Syncing your timetable.`),0);
     if((u&&u.id)===(sbUser&&sbUser.id))return;
     const prev=sbUser;sbUser=u;
     setTimeout(()=>{if(u)connectSb();else if(prev)disconnectSb();else setSync("signedout");},0);
@@ -706,7 +947,7 @@ function renderAcct(){
   const on=!!sbUser;
   $("#acctIn").hidden=on;$("#acctFootIn").hidden=on;$("#acctFootOut").hidden=!on;
   $("#acctTitle").textContent=on?"Account":"Sign in to sync";
-  $("#acctSub").textContent=on?`Signed in as ${sbUser.email}. Your timetable syncs to your database.`:"Your timetable is saved in your own database and syncs between your phone and laptop.";
+  $("#acctSub").textContent=on?`Signed in as ${sbUser.user_metadata&&sbUser.user_metadata.name?sbUser.user_metadata.name+" ("+sbUser.email+")":sbUser.email}. Your timetable syncs across your devices.`:"Your timetable is saved in your own database and syncs between your phone and laptop.";
 }
 async function acctAuth(signUp){
   const email=$("#aEmail").value.trim(),password=$("#aPass").value,msg=$("#aMsg");
@@ -1297,9 +1538,9 @@ function checkReminders(){
 }
 function notifyNote(){
   const el=$("#sNotifyNote"),btn=$("#sNotify");
-  if(!("Notification" in window)){btn.hidden=true;el.textContent="This browser can't show system notifications. Reminders appear inside Semaine while it's open.";return;}
+  if(!("Notification" in window)){btn.hidden=true;el.textContent="This browser can't show system notifications. Reminders appear inside Cadence while it's open.";return;}
   btn.hidden=Notification.permission==="granted";
-  el.textContent=Notification.permission==="granted"?"System notifications are on. Reminders fire while Semaine is open in a tab.":Notification.permission==="denied"?"Notifications are blocked for this page. Reminders still appear inside Semaine while it's open.":"Reminders appear inside Semaine while it's open. Allow notifications to also get them when the tab is in the background.";
+  el.textContent=Notification.permission==="granted"?"System notifications are on. Reminders fire while Cadence is open in a tab.":Notification.permission==="denied"?"Notifications are blocked for this page. Reminders still appear inside Semaine while it's open.":"Reminders appear inside Cadence while it's open. Allow notifications to also get them when the tab is in the background.";
 }
 
 /* ================= weekly agenda (A4 PDF) ================= */
@@ -1374,7 +1615,7 @@ function buildAgenda(mon,orient,colorBy){
   const legendTop=legendBottom-rowsN*rowH;
   items.forEach(it=>{const y=legendTop+it.row*rowH+3.6;R({x:it.x,y:y-2.6,w:3.2,h:3.2,r:0.7,fill:it.c});let x=it.x+4.8;Tx(x,y,it.label,7.5,{color:INK});x+=tw(it.label,7.5,false)+1.4;Tx(x,y,it.val,7.5,{bold:true,color:MUTED});});
   Ln({x1:M,y1:H-12,x2:W-M,y2:H-12,stroke:GRID,sw:0.2});
-  Tx(M,footY,"Semaine",7,{bold:true,color:MUTED});
+  Tx(M,footY,"Cadence",7,{bold:true,color:MUTED});
   const now=new Date();Tx(W-M,footY,`Printed ${now.getDate()} ${MONS[now.getMonth()]} ${now.getFullYear()}`,7,{color:MUTED,align:"right"});
   // grid
   const gy=M+18,dh=9,timeW=11;
@@ -1448,7 +1689,7 @@ function agendaPDF(L){
       doc.text(o.s,o.x,o.y,{align:o.align==="middle"?"center":o.align});
     }
   }
-  doc.setProperties({title:"Weekly agenda",creator:"Semaine"});
+  doc.setProperties({title:"Weekly agenda",creator:"Cadence"});
   return doc;
 }
 function renderPdfPreview(){
@@ -1489,14 +1730,14 @@ async function sysNotify(body,tag){
   try{
     if(!("Notification" in window)||Notification.permission!=="granted")return;
     const opts={body,tag,icon:"icon-192.png",badge:"icon-192.png"};
-    if(swReg&&swReg.showNotification)await swReg.showNotification("Semaine",opts);else new Notification("Semaine",opts);
+    if(swReg&&swReg.showNotification)await swReg.showNotification("Cadence",opts);else new Notification("Cadence",opts);
   }catch(e){}
 }
 function initPWA(){
   if(window.claude||!("serviceWorker" in navigator)||!/^https?:$/.test(location.protocol))return;
   navigator.serviceWorker.register("sw.js").then(r=>{swReg=r;}).catch(()=>{});
   window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installEvt=e;$("#installItem").hidden=false;});
-  window.addEventListener("appinstalled",()=>{installEvt=null;$("#installItem").hidden=true;toast("Semaine is installed");});
+  window.addEventListener("appinstalled",()=>{installEvt=null;$("#installItem").hidden=true;toast("Cadence is installed");});
   const standalone=window.matchMedia("(display-mode: standalone)").matches||navigator.standalone;
   if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!standalone)$("#installItem").hidden=false;
 }
@@ -1789,6 +2030,156 @@ async function importFile(file){
   finally{$("#icsFile").value="";}
 }
 
+/* ================= splash + onboarding ================= */
+const ONB_KEY="cadence.onboarded";
+let onbI=0,onbN=0,typeT=null,onbTimers=[];
+function hideSplash(){
+  const el=$("#splash");if(!el||el.classList.contains("gone"))return;
+  const reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setTimeout(()=>{el.classList.add("gone");setTimeout(()=>el.remove(),650);maybeOnboard();},Math.max(0,(reduce?300:1300)-performance.now()));
+}
+async function maybeOnboard(){
+  let done=false;try{done=!!localStorage.getItem(ONB_KEY);}catch(e){}
+  if(new URLSearchParams(location.search).get("tool")||document.querySelector("dialog[open]"))return;
+  if(!done){openOnboarding();return;}
+  await Promise.race([sbReady,new Promise(r=>setTimeout(r,3000))]);
+  if(needsAuth()&&!document.querySelector("dialog[open]"))openAuth("signin");
+}
+function openOnboarding(){
+  const slides=[...document.querySelectorAll(".onb-slide")];onbN=slides.length;
+  $("#onbDots").innerHTML=slides.map((_,i)=>`<button aria-label="Step ${i+1} of ${onbN}"></button>`).join("");
+  const s=state.settings;
+  setSeg("#obLang",s.lang.startsWith("fr")?"fr-FR":"en-US");setSeg("#obClock",s.clock);
+  $("#obRate").value=payCfg().rate||"";
+  $("#obInstall").hidden=!installEvt&&!/iphone|ipad|ipod/i.test(navigator.userAgent);
+  $("#obNotify").hidden=!("Notification" in window)||Notification.permission==="granted";
+  $("#obMsg").textContent="";
+  $("#onb").showModal();goOnb(0);
+}
+function setSeg(sel,v){document.querySelectorAll(sel+" button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.v===v)));}
+function goOnb(i){
+  onbI=Math.max(0,Math.min(onbN-1,i));
+  document.querySelectorAll(".onb-slide").forEach((el,k)=>{el.classList.toggle("active",k===onbI);el.classList.toggle("before",k<onbI);el.setAttribute("aria-hidden",String(k!==onbI));el.inert=k!==onbI;});
+  document.querySelectorAll("#onbDots button").forEach((b,k)=>{if(k===onbI)b.setAttribute("aria-current","step");else b.removeAttribute("aria-current");});
+  $("#onbBack").style.visibility=onbI?"visible":"hidden";
+  $("#onbNext").textContent=onbI===onbN-1?"Start planning":onbI===0?"Take the tour":"Next";
+  $("#onbSkip").hidden=onbI===onbN-1;
+  onbTimers.forEach(clearTimeout);onbTimers=[];clearInterval(typeT);
+  if(onbI===1)playVoiceDemo();
+}
+function playVoiceDemo(){
+  const tx=$("#onbType"),cards=[...document.querySelectorAll("#onbDrafts div")];
+  const phrase="Monday marketing class 9 to 12, shift Thursday 6 to 11pm";
+  cards.forEach(c=>c.classList.remove("in"));tx.textContent="";let k=0;
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches){tx.textContent=phrase;cards.forEach(c=>c.classList.add("in"));return;}
+  typeT=setInterval(()=>{k++;tx.textContent=phrase.slice(0,k);
+    if(k>=phrase.length){clearInterval(typeT);cards.forEach((c,j)=>onbTimers.push(setTimeout(()=>c.classList.add("in"),300+j*250)));onbTimers.push(setTimeout(()=>{if(onbI===1)playVoiceDemo();},4200));}},38);
+}
+function finishOnb(save){
+  if(save){
+    const lang=document.querySelector('#obLang [aria-pressed="true"]'),clock=document.querySelector('#obClock [aria-pressed="true"]');
+    if(lang)state.settings.lang=lang.dataset.v;if(clock)state.settings.clock=clock.dataset.v;
+    const r=$("#obRate").value;if(r!=="")payCfg().rate=Math.max(0,+r);
+    saveSettings();applyTheme();render();
+  }
+  try{localStorage.setItem(ONB_KEY,"1");}catch(e){}
+  clearInterval(typeT);onbTimers.forEach(clearTimeout);
+  if($("#onb").open)$("#onb").close();
+  const afterTour=()=>{if(save){toast(state.events.length?"You're all set.":"You're all set. Tap the mic to add your first week.",false,6000);$("#mic").focus();}};
+  Promise.race([sbReady,new Promise(r=>setTimeout(r,3000))]).then(()=>{
+    if(needsAuth())setTimeout(()=>openAuth("signup",afterTour),250);else setTimeout(afterTour,250);
+  });
+}
+
+/* ================= sign in / create account ================= */
+const AUTH_SKIP="cadence.authSkip";
+let authMode="signup",authAfter=null,authEmail="";
+function needsAuth(){let skip=false;try{skip=!!localStorage.getItem(AUTH_SKIP);}catch(e){}return !!sb&&!sbUser&&!skip;}
+const AUTH_TEXT={
+  signup:{t:"Create your account",s:"It's free. Your timetable syncs to all your devices, and only you can see it.",go:"Create account"},
+  signin:{t:"Welcome back",s:"Sign in to pick up your timetable where you left it.",go:"Sign in"},
+  forgot:{t:"Reset your password",s:"Enter your email and we'll send you a link to choose a new password.",go:"Send reset link"},
+  reset:{t:"Choose a new password",s:"Pick something at least 8 characters long.",go:"Save new password"}
+};
+function openAuth(mode,after){
+  authAfter=after||authAfter;setAuthMode(mode||"signin");
+  $("#authMail").hidden=true;$("#authForm").hidden=false;
+  $("#gWrap").hidden=!AUTH_GOOGLE||mode==="forgot"||mode==="reset";
+  if(!$("#authDlg").open)$("#authDlg").showModal();
+  setTimeout(()=>{const f=mode==="reset"?$("#auPass"):($("#auEmail").value?$("#auPass"):$("#auEmail"));f.focus();},60);
+}
+function setAuthMode(m){
+  authMode=m;const T=AUTH_TEXT[m];
+  $("#authTitle").textContent=T.t;$("#authSub").textContent=T.s;$("#auGo").textContent=T.go;
+  document.querySelectorAll("#authTabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.m===m)));
+  $("#authTabs").hidden=m==="forgot"||m==="reset";
+  $("#fName").hidden=m!=="signup";$("#fEmail").hidden=m==="reset";$("#fPass").hidden=m==="forgot";
+  $("#auMeter").hidden=m!=="signup"&&m!=="reset";
+  $("#auPass").autocomplete=m==="signin"?"current-password":"new-password";
+  $("#auPass").placeholder=m==="signin"?"Your password":"At least 8 characters";
+  $("#auForgot").hidden=m!=="signin";
+  $("#authHint").textContent=m==="forgot"?"":"";
+  $("#authRow").hidden=m!=="signin";
+  if(m==="forgot"){$("#authRow").hidden=false;$("#auForgot").hidden=false;$("#auForgot").textContent="Back to sign in";}else $("#auForgot").textContent="Forgot password?";
+  $("#authSkipWrap").hidden=m==="reset";
+  $("#auErr").textContent="";$("#auErr").className="auth-err";
+  $("#gWrap").hidden=!AUTH_GOOGLE||m==="forgot"||m==="reset";
+  meter();
+}
+function closeAuth(msg){
+  if($("#authDlg").open)$("#authDlg").close();
+  $("#auPass").value="";
+  const cb=authAfter;authAfter=null;
+  if(msg)setTimeout(()=>toast(msg,false,5000),200);else if(cb)cb();
+}
+function meter(){
+  const v=$("#auPass").value;let sc=0;
+  if(v.length>=8)sc++;if(v.length>=12)sc++;if(/[A-Z]/.test(v)&&/[a-z]/.test(v))sc++;if(/\d/.test(v)&&/[^A-Za-z0-9]/.test(v))sc++;
+  $("#auMeter").dataset.s=v?String(Math.max(1,sc)):"0";
+}
+function authError(e){
+  const m=(e&&e.message)||String(e||"");
+  if(/invalid login credentials/i.test(m))return "Email or password is incorrect.";
+  if(/already registered|already exists/i.test(m))return "An account with this email already exists. Sign in instead.";
+  if(/email not confirmed/i.test(m))return "Please confirm your email first. Check your inbox for the link.";
+  if(/rate limit|too many/i.test(m))return "Too many attempts. Wait a minute and try again.";
+  if(/password.*(short|least)/i.test(m))return "Use a password with at least 8 characters.";
+  if(/network|fetch/i.test(m))return "Can't reach the server. Check your connection.";
+  return m||"Something went wrong. Please try again.";
+}
+async function authSubmit(){
+  const err=$("#auErr"),go=$("#auGo"),email=$("#auEmail").value.trim(),pass=$("#auPass").value,name=$("#auName").value.trim();
+  err.className="auth-err";err.textContent="";
+  if(!sb){err.textContent="Can't reach the server. Reload and try again.";return;}
+  if(authMode!=="reset"&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent="Enter a valid email address.";$("#auEmail").focus();return;}
+  if((authMode==="signup"||authMode==="reset")&&pass.length<8){err.textContent="Use a password with at least 8 characters.";$("#auPass").focus();return;}
+  if(authMode==="signin"&&!pass){err.textContent="Enter your password.";$("#auPass").focus();return;}
+  go.setAttribute("aria-busy","true");const label=go.textContent;go.textContent="Please wait…";
+  const redirect=location.origin+location.pathname;
+  try{
+    if(authMode==="signup"){
+      const {data,error}=await sb.auth.signUp({email,password:pass,options:{emailRedirectTo:redirect,data:name?{name}:{}}});
+      if(error)throw error;
+      if(data&&data.user&&Array.isArray(data.user.identities)&&!data.user.identities.length)throw new Error("already registered");
+      if(!data.session){authEmail=email;showMailSent(`We sent a confirmation link to ${email}. Open it, then come back here and sign in.`);}
+    }else if(authMode==="signin"){
+      const {error}=await sb.auth.signInWithPassword({email,password:pass});if(error)throw error;
+    }else if(authMode==="forgot"){
+      const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:redirect});if(error)throw error;
+      err.className="auth-err ok";err.textContent="If that email has an account, a reset link is on its way.";
+    }else if(authMode==="reset"){
+      const {error}=await sb.auth.updateUser({password:pass});if(error)throw error;
+      closeAuth("Password updated. You're signed in.");
+    }
+  }catch(e){err.textContent=authError(e);}
+  finally{go.removeAttribute("aria-busy");go.textContent=label;}
+}
+function showMailSent(text){
+  $("#authForm").hidden=true;$("#authTabs").hidden=true;$("#authMail").hidden=false;
+  $("#authTitle").textContent="Check your inbox";$("#authSub").textContent="";
+  $("#mailText").textContent=text;$("#mailMsg").textContent="";
+}
+
 /* ================= voice ================= */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let rec=null,listening=false,silenceT=null,heardFinal="";
@@ -1908,9 +2299,33 @@ function toggleTools(show){
   else m.hidden=true;
   b.setAttribute("aria-expanded",String(on));
 }
+$("#onbNext").onclick=()=>{if(onbI===onbN-1)finishOnb(true);else goOnb(onbI+1);};
+$("#onbBack").onclick=()=>goOnb(onbI-1);
+$("#onbSkip").onclick=()=>goOnb(onbN-1);
+$("#onbDots").onclick=e=>{const b=e.target.closest("button");if(b)goOnb([...b.parentNode.children].indexOf(b));};
+$("#onb").addEventListener("cancel",e=>{e.preventDefault();finishOnb(false);});
+$("#onb").addEventListener("keydown",e=>{if(/INPUT|SELECT|TEXTAREA/.test(e.target.tagName))return;if(e.key==="ArrowRight"){e.preventDefault();if(onbI<onbN-1)goOnb(onbI+1);}if(e.key==="ArrowLeft"){e.preventDefault();goOnb(onbI-1);}});
+(()=>{let x0=null,y0=0;const t=$("#onbTrack");
+  t.addEventListener("pointerdown",e=>{if(e.target.closest("button,input,select,label"))return;x0=e.clientX;y0=e.clientY;});
+  t.addEventListener("pointerup",e=>{if(x0===null)return;const dx=e.clientX-x0,dy=e.clientY-y0;x0=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){if(dx<0&&onbI<onbN-1)goOnb(onbI+1);else if(dx>0)goOnb(onbI-1);}});})();
+$("#obLang").onclick=e=>{const b=e.target.closest("button");if(b)setSeg("#obLang",b.dataset.v);};
+$("#obClock").onclick=e=>{const b=e.target.closest("button");if(b)setSeg("#obClock",b.dataset.v);};
+$("#obNotify").onclick=async()=>{if(!("Notification" in window))return;try{const r=await Notification.requestPermission();$("#obMsg").textContent=r==="granted"?"Reminders are on.":"No problem. You can turn them on later in Settings.";$("#obNotify").hidden=r==="granted";}catch(e){}};
+$("#obInstall").onclick=installApp;
+$("#authTabs").onclick=e=>{const b=e.target.closest("button");if(b)setAuthMode(b.dataset.m);};
+$("#auGo").onclick=authSubmit;
+$("#authForm").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.tagName==="INPUT"){e.preventDefault();authSubmit();}});
+$("#auPass").addEventListener("input",meter);
+$("#auShow").onclick=()=>{const i=$("#auPass"),show=i.type==="password";i.type=show?"text":"password";$("#auShow").textContent=show?"Hide":"Show";$("#auShow").setAttribute("aria-label",show?"Hide password":"Show password");};
+$("#auForgot").onclick=()=>setAuthMode(authMode==="forgot"?"signin":"forgot");
+$("#auGoogle").onclick=async()=>{try{const {error}=await sb.auth.signInWithOAuth({provider:"google",options:{redirectTo:location.origin+location.pathname}});if(error)throw error;}catch(e){$("#auErr").textContent=authError(e);}};
+$("#authSkip").onclick=()=>{try{localStorage.setItem(AUTH_SKIP,"1");}catch(e){}closeAuth();};
+$("#authDlg").addEventListener("cancel",e=>{e.preventDefault();if(authMode==="reset")return;try{localStorage.setItem(AUTH_SKIP,"1");}catch(err){}closeAuth();});
+$("#mailSignin").onclick=()=>{$("#authMail").hidden=true;$("#authForm").hidden=false;$("#authTabs").hidden=false;setAuthMode("signin");if(authEmail)$("#auEmail").value=authEmail;$("#auPass").value="";$("#auPass").focus();};
+$("#mailResend").onclick=async()=>{const m=$("#mailMsg");try{const {error}=await sb.auth.resend({type:"signup",email:authEmail,options:{emailRedirectTo:location.origin+location.pathname}});if(error)throw error;m.className="auth-err ok";m.textContent="Sent again. Check spam if you don't see it.";}catch(e){m.className="auth-err";m.textContent=authError(e);}};
 $("#toolsBtn").onclick=e=>{e.stopPropagation();toggleTools();};
 $("#toolsMenu").onclick=e=>{const b=e.target.closest("[data-tool]");if(!b)return;toggleTools(false);
-  ({summary:()=>openSummary(),avail:()=>openAvail(),earn:openEarn,pdf:openPdf,import:openImport,install:installApp})[b.dataset.tool]();};
+  ({summary:()=>openSummary(),avail:()=>openAvail(),earn:openEarn,pdf:openPdf,import:openImport,install:installApp,tour:openOnboarding})[b.dataset.tool]();};
 document.addEventListener("click",e=>{if(!$("#toolsMenu").hidden&&!e.target.closest("#toolsMenu"))toggleTools(false);});
 window.addEventListener("resize",()=>toggleTools(false));
 $("#sumClose").onclick=()=>$("#sumDlg").close();
@@ -1941,7 +2356,7 @@ $("#pdfPrev").onclick=()=>{pdfState.week=addDays(pdfState.week,-7);renderPdfPrev
 $("#pdfNext").onclick=()=>{pdfState.week=addDays(pdfState.week,7);renderPdfPreview();};
 $("#pdfOrient").onclick=e=>{const b=e.target.closest("button");if(!b)return;pdfState.orient=b.dataset.o;savePdfPrefs();renderPdfPreview();};
 $("#pdfColor").onclick=e=>{const b=e.target.closest("button");if(!b)return;pdfState.color=b.dataset.c;savePdfPrefs();renderPdfPreview();};
-$("#acctBtn").onclick=()=>{renderAcct();$("#aMsg").textContent="";$("#acctDlg").showModal();};
+$("#acctBtn").onclick=()=>{if(sb&&!sbUser){openAuth("signin");return;}renderAcct();$("#aMsg").textContent="";$("#acctDlg").showModal();};
 $("#aSignIn").onclick=()=>acctAuth(false);
 $("#aUp").onclick=()=>acctAuth(true);
 $("#aCancel").onclick=()=>$("#acctDlg").close();
@@ -1965,7 +2380,8 @@ setInterval(()=>{checkReminders();checkSummary();syncFeeds(false);if(!document.h
 /* ================= boot ================= */
 if(state.mode!=="month")state.lastWeekMode=state.mode;
 loadLocal();applyTheme();render();setSync("local");checkReminders();
-initCloud().then(()=>{if(!cloud)initSupabase();});
+initCloud().then(()=>{if(!cloud)initSupabase();else sbReadyDone();});
+Promise.race([document.fonts?document.fonts.ready:Promise.resolve(),new Promise(r=>setTimeout(r,2500))]).then(hideSplash);
 initPWA();setTimeout(checkSummary,1500);
 try{const tool=new URLSearchParams(location.search).get("tool");if(tool){history.replaceState(null,"",location.pathname);setTimeout(()=>({summary:()=>openSummary(),avail:()=>openAvail(),earn:openEarn,import:openImport,pdf:openPdf}[tool]||(()=>{}))(),400);}}catch(e){}
 })();

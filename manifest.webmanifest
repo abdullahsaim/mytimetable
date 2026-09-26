@@ -1,6 +1,6 @@
 {
-  "name": "Semaine: classes and shifts",
-  "short_name": "Semaine",
+  "name": "Cadence: classes, shifts and life",
+  "short_name": "Cadence",
   "description": "Voice-first weekly planner for classes and work shifts.",
   "start_url": "./",
   "scope": "./",
