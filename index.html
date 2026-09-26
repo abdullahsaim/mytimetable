@@ -11,9 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Cadence">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="vendor/fonts.css" rel="stylesheet">
 <style>
 :root{
   --bg:#EDF0F5; --surface:#FFFFFF; --surface-2:#F5F7FA; --ink:#16213A; --muted:#5A6580;
@@ -45,6 +43,18 @@
 }
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none!important}
+.setsec{border-top:1px solid var(--line-soft); margin-top:6px; padding-top:14px}
+.setsec h3{font:700 15px var(--display); margin:0 0 4px}
+.setsec .note{margin:0 0 10px}
+.btnrow{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px}
+.pstat{display:inline-flex; align-items:center; gap:7px; font-size:13.5px; font-weight:600; margin-bottom:8px}
+.pstat i{width:9px; height:9px; border-radius:50%; background:var(--line)}
+.pstat.on i{background:var(--personal)} .pstat.off i{background:var(--muted)} .pstat.err i{background:var(--clash)}
+.consent{display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:var(--muted); margin:-2px 0 14px; line-height:1.45; cursor:pointer}
+.consent input{width:18px; height:18px; margin:1px 0 0; flex:none; accent-color:var(--class)}
+.consent a{color:var(--class); font-weight:600}
+.danger-zone{border:1px solid color-mix(in srgb,var(--clash) 35%,transparent); background:color-mix(in srgb,var(--clash) 6%,var(--surface)); border-radius:12px; padding:12px; margin-top:4px}
+#delInput{letter-spacing:.08em; font-weight:700}
 /* splash */
 #splash{position:fixed; inset:0; z-index:100; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; background:radial-gradient(120% 80% at 50% 0%,#23345C 0%,#111A2E 58%,#0A101E 100%); color:#F2F4F9; transition:opacity .55s ease, visibility .55s}
 #splash.gone{opacity:0; visibility:hidden}
@@ -596,6 +606,20 @@ dialog::backdrop{background:rgba(10,16,32,.45)}
     <label class="field">Sunday summary<select id="sSummary"><option value="on">Show next week's summary on Sunday evening</option><option value="off">Off</option></select></label>
     <p class="note" id="sNotifyNote">Reminders show while Cadence is open in a browser tab.</p>
     <label class="field">Theme<select id="sTheme"><option value="auto">Match device</option><option value="light">Light</option><option value="dark">Dark</option></select></label>
+
+    <section class="setsec" id="pushSec" hidden>
+      <h3>Notifications when Cadence is closed</h3>
+      <div class="pstat" id="pushStat"><i></i><span></span></div>
+      <p class="note" id="pushNote"></p>
+      <div class="btnrow"><button class="btn" type="button" id="pushOnBtn">Turn on for this device</button><button class="btn" type="button" id="pushTestBtn" hidden>Send a test</button><button class="btn" type="button" id="pushOffBtn" hidden>Turn off</button></div>
+    </section>
+
+    <section class="setsec">
+      <h3>Privacy and your data</h3>
+      <p class="note" id="privNote">Your timetable is only used to run Cadence. No ads, no tracking, never sold.</p>
+      <div class="btnrow"><button class="btn" type="button" id="exportBtn">Export my data</button><a class="btn" id="privLink" href="privacy.html" target="_blank" rel="noopener" style="display:inline-grid;place-items:center;text-decoration:none">Privacy policy</a></div>
+      <div class="danger-zone"><div class="btnrow" style="margin:0"><button class="btn danger" type="button" id="delAcctBtn" hidden>Delete my account</button><button class="btn danger" type="button" id="wipeBtn">Delete all my data</button></div></div>
+    </section>
   </div>
   <footer><button class="btn danger left" id="sClear">Clear this week</button><button class="btn" id="sCancel">Cancel</button><button class="btn primary" id="sSave">Save settings</button></footer>
 </div></dialog>
@@ -646,6 +670,7 @@ dialog::backdrop{background:rgba(10,16,32,.45)}
       <label class="field" id="fEmail">Email<input id="auEmail" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com"></label>
       <div class="field" id="fPass"><label for="auPass">Password</label><div class="pw"><input id="auPass" type="password" autocomplete="new-password" placeholder="At least 8 characters"><button type="button" id="auShow" aria-label="Show password">Show</button></div><div class="meter" id="auMeter" data-s="0" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
       <div class="auth-row" id="authRow"><span id="authHint"></span><button type="button" class="linkbtn" id="auForgot">Forgot password?</button></div>
+      <label class="consent" id="fConsent"><input type="checkbox" id="auConsent"><span>I have read the <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a> and agree that Cadence stores my timetable to sync it across my devices.</span></label>
       <p class="auth-err" id="auErr" role="alert"></p>
       <button class="btn primary auth-go" id="auGo" type="button">Create account</button>
       <div id="gWrap" hidden><div class="or">or</div><button class="btn gbtn" id="auGoogle" type="button"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.6 13.2l7.8 6.1C12.3 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 7.1-10 7.1-17.5z"/><path fill="#FBBC05" d="M10.4 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.3.8-4.7l-7.8-6.1C1 16.5 0 20.1 0 24s1 7.5 2.6 10.8l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.7-4.1-13.6-9.8l-7.8 6.1C6.6 42.6 14.6 48 24 48z"/></svg>Continue with Google</button></div>
@@ -659,6 +684,16 @@ dialog::backdrop{background:rgba(10,16,32,.45)}
     </div>
     <div class="auth-skip" id="authSkipWrap"><button class="linkbtn" id="authSkip" type="button">Continue without an account</button><br>Your timetable stays on this device only.</div>
   </main>
+</div></dialog>
+
+<!-- Delete confirm -->
+<dialog id="delDlg"><div class="dlg">
+  <header><h2 id="delTitle">Delete your account?</h2><div class="sub" id="delSub"></div></header>
+  <div class="body">
+    <label class="field">Type DELETE to confirm<input id="delInput" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false"></label>
+    <p class="note" id="delMsg"></p>
+  </div>
+  <footer><button class="btn left" id="delExport">Export first</button><button class="btn" id="delCancel">Cancel</button><button class="btn destroy" id="delGo" disabled>Delete permanently</button></footer>
 </div></dialog>
 
 <!-- Summary -->
@@ -804,7 +839,8 @@ const state={
   drafts:[], heard:""
 };
 function loadLocal(){try{const r=localStorage.getItem(LS);if(r){const o=JSON.parse(r);if(Array.isArray(o.events))state.events=o.events;Object.assign(state.settings,o.settings||{});}}catch(e){}}
-function saveLocal(){try{localStorage.setItem(LS,JSON.stringify({events:state.events,settings:state.settings}));}catch(e){}}
+let wiping=false;
+function saveLocal(){if(wiping)return;try{localStorage.setItem(LS,JSON.stringify({events:state.events,settings:state.settings}));}catch(e){}}
 
 /* ---------- database config (self-hosted) ----------
    Paste your Supabase project URL and anon/public key here.
@@ -813,13 +849,15 @@ const SUPABASE_URL="https://uoevqzzhxghwmupnitsi.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvZXZxenpoeGdod211cG5pdHNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzNjg3MTksImV4cCI6MjEwNTk0NDcxOX0.cpugKGCuhc3p1PIEfUMzjPju5DyElvYP2dxG9mDR9B8";
 /* Set to true after enabling Google in Supabase > Authentication > Providers. */
 const AUTH_GOOGLE=false;
+/* Web Push public key (from `npx web-push generate-vapid-keys`). Empty = no push when the app is closed. */
+const VAPID_PUBLIC_KEY="BGkFzNScnDHxgUNmXzUsDQK3sL8bqR1t8zJToX242LC4ib9n8X_xaL3yyxXa3QVTAE68zGCysr9KoPTu9x4zt5g"; /* <-- paste your VAPID public key here */
 
 /* ---------- cloud sync ---------- */
 let cloud=null, pending=0;
 const DIRTY_KEY="semaine.dirty";
 const dirty=new Set(); let flushT=null;
 try{JSON.parse(localStorage.getItem(DIRTY_KEY)||"[]").forEach(k=>dirty.add(k));}catch(e){}
-function persistDirty(){try{localStorage.setItem(DIRTY_KEY,JSON.stringify([...dirty]));}catch(e){}}
+function persistDirty(){if(wiping)return;try{localStorage.setItem(DIRTY_KEY,JSON.stringify([...dirty]));}catch(e){}}
 function setSync(s){const el=$("#sync");el.textContent={synced:"Synced",saving:"Saving…",local:"Saved on this device",error:"Offline, will sync later",signedout:"Not signed in, saved on this device"}[s]||"";}
 
 /* Claude-hosted storage */
@@ -873,7 +911,7 @@ let sbReadyDone;const sbReady=new Promise(r=>{sbReadyDone=r;});
 async function initSupabase(){
   if(!SUPABASE_URL||!SUPABASE_ANON_KEY){sbReadyDone();return;}
   $("#acctBtn").hidden=false;setSync("signedout");
-  try{await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js");}
+  try{await loadScript("vendor/supabase.js");}
   catch(e){setSync("error");sbReadyDone();return;}
   sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
   sb.auth.onAuthStateChange((event,session)=>{
@@ -926,6 +964,7 @@ async function connectSb(){
     await flush();
     if(!dirty.size)setSync("synced");
     syncFeeds(false);
+    refreshPush();
     if(!sbChan)sbChan=sb.channel("events-"+sbUser.id)
       .on("postgres_changes",{event:"*",schema:"public",table:"events",filter:`user_id=eq.${sbUser.id}`},scheduleRefresh)
       .subscribe();
@@ -1540,7 +1579,7 @@ function notifyNote(){
   const el=$("#sNotifyNote"),btn=$("#sNotify");
   if(!("Notification" in window)){btn.hidden=true;el.textContent="This browser can't show system notifications. Reminders appear inside Cadence while it's open.";return;}
   btn.hidden=Notification.permission==="granted";
-  el.textContent=Notification.permission==="granted"?"System notifications are on. Reminders fire while Cadence is open in a tab.":Notification.permission==="denied"?"Notifications are blocked for this page. Reminders still appear inside Semaine while it's open.":"Reminders appear inside Cadence while it's open. Allow notifications to also get them when the tab is in the background.";
+  el.textContent=pushOn()&&sbUser?"Reminders arrive on this device even when Cadence is closed.":Notification.permission==="granted"?"System notifications are on. Reminders fire while Cadence is open in a tab.":Notification.permission==="denied"?"Notifications are blocked for this page. Reminders still appear inside Cadence while it's open.":"Reminders appear inside Cadence while it's open. Allow notifications to also get them when the tab is in the background.";
 }
 
 /* ================= weekly agenda (A4 PDF) ================= */
@@ -1709,7 +1748,7 @@ function savePdfPrefs(){try{localStorage.setItem("semaine.pdf",JSON.stringify({o
 async function downloadPdf(){
   const btn=$("#pdfSave"),msg=$("#pdfMsg");btn.disabled=true;msg.textContent="Preparing PDF…";
   try{
-    if(!window.jspdf)await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+    if(!window.jspdf)await loadScript("vendor/jspdf.umd.min.js");
     const doc=agendaPDF(buildAgenda(pdfState.week,pdfState.orient,pdfState.color));
     const blob=doc.output("blob"),name=`agenda-${iso(pdfState.week)}.pdf`;
     let dl=null;try{if(window.claude&&typeof window.claude.use==="function")dl=await window.claude.use("downloads");}catch(e){}
@@ -1729,6 +1768,7 @@ let swReg=null, installEvt=null;
 async function sysNotify(body,tag){
   try{
     if(!("Notification" in window)||Notification.permission!=="granted")return;
+    if(pushOn()&&sbUser)return; // the server already sends this one
     const opts={body,tag,icon:"icon-192.png",badge:"icon-192.png"};
     if(swReg&&swReg.showNotification)await swReg.showNotification("Cadence",opts);else new Notification("Cadence",opts);
   }catch(e){}
@@ -2113,7 +2153,7 @@ function setAuthMode(m){
   $("#authTitle").textContent=T.t;$("#authSub").textContent=T.s;$("#auGo").textContent=T.go;
   document.querySelectorAll("#authTabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.m===m)));
   $("#authTabs").hidden=m==="forgot"||m==="reset";
-  $("#fName").hidden=m!=="signup";$("#fEmail").hidden=m==="reset";$("#fPass").hidden=m==="forgot";
+  $("#fName").hidden=m!=="signup";$("#fConsent").hidden=m!=="signup";$("#fEmail").hidden=m==="reset";$("#fPass").hidden=m==="forgot";
   $("#auMeter").hidden=m!=="signup"&&m!=="reset";
   $("#auPass").autocomplete=m==="signin"?"current-password":"new-password";
   $("#auPass").placeholder=m==="signin"?"Your password":"At least 8 characters";
@@ -2154,6 +2194,7 @@ async function authSubmit(){
   if(authMode!=="reset"&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){err.textContent="Enter a valid email address.";$("#auEmail").focus();return;}
   if((authMode==="signup"||authMode==="reset")&&pass.length<8){err.textContent="Use a password with at least 8 characters.";$("#auPass").focus();return;}
   if(authMode==="signin"&&!pass){err.textContent="Enter your password.";$("#auPass").focus();return;}
+  if(authMode==="signup"&&!$("#auConsent").checked){err.textContent="Please accept the Privacy Policy to create an account.";$("#auConsent").focus();return;}
   go.setAttribute("aria-busy","true");const label=go.textContent;go.textContent="Please wait…";
   const redirect=location.origin+location.pathname;
   try{
@@ -2180,6 +2221,125 @@ function showMailSent(text){
   $("#mailText").textContent=text;$("#mailMsg").textContent="";
 }
 
+/* ================= push when closed ================= */
+const PUSH_KEY="cadence.pushEndpoint";
+const pushSupported=()=>!!(VAPID_PUBLIC_KEY&&!window.claude&&"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window);
+function pushOn(){try{return !!localStorage.getItem(PUSH_KEY);}catch(e){return false;}}
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent);
+const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+function b64uToU8(s){s=s.replace(/-/g,"+").replace(/_/g,"/");while(s.length%4)s+="=";const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u;}
+async function swReady(){if(!("serviceWorker" in navigator))throw new Error("no sw");return Promise.race([navigator.serviceWorker.ready,new Promise((_,r)=>setTimeout(()=>r(new Error("Service worker not ready. Reload the page and try again.")),8000))]);}
+async function registerSub(sub){
+  const j=sub.toJSON();
+  const {error}=await sb.rpc("register_push",{p_endpoint:j.endpoint,p_p256dh:j.keys.p256dh,p_auth:j.keys.auth,p_tz:Intl.DateTimeFormat().resolvedOptions().timeZone||"Europe/Paris"});
+  if(error)throw error;
+  try{localStorage.setItem(PUSH_KEY,j.endpoint);}catch(e){}
+}
+async function enablePush(silent){
+  if(!pushSupported())return false;
+  if(!sb||!sbUser){if(!silent)pushMsg("Sign in first, so reminders can reach all your devices.","err");return false;}
+  if(isIOS()&&!isStandalone()){if(!silent)pushMsg("On iPhone, first add Cadence to your Home Screen (Share, then Add to Home Screen), open it from there, and turn this on.","err");return false;}
+  try{
+    const perm=Notification.permission==="granted"?"granted":await Notification.requestPermission();
+    if(perm!=="granted"){if(!silent)pushMsg(perm==="denied"?"Notifications are blocked. Allow them in your browser's site settings, then try again.":"Notifications weren't allowed.","err");return false;}
+    const reg=await swReady();
+    const sub=await reg.pushManager.getSubscription()||await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uToU8(VAPID_PUBLIC_KEY)});
+    await registerSub(sub);
+    if(!silent){renderPush();toast("Notifications are on for this device",false,5000);}
+    return true;
+  }catch(e){console.warn(e);if(!silent)pushMsg("Couldn't turn on notifications: "+(e.message||e),"err");return false;}
+}
+async function disablePush(quiet){
+  try{
+    const reg=await swReady(),sub=await reg.pushManager.getSubscription();
+    if(sub){if(sb&&sbUser){try{await sb.rpc("unregister_push",{p_endpoint:sub.endpoint});}catch(e){}}await sub.unsubscribe();}
+  }catch(e){}
+  try{localStorage.removeItem(PUSH_KEY);}catch(e){}
+  if(!quiet){renderPush();toast("Notifications turned off for this device");}
+}
+async function refreshPush(){
+  if(!pushSupported()||!sbUser)return;
+  try{
+    const reg=await swReady(),sub=await reg.pushManager.getSubscription();
+    if(sub&&Notification.permission==="granted"){await registerSub(sub);}
+    else if(Notification.permission==="granted"&&(pushOn()||localStorage.getItem("cadence.askedPush")!=="1")){localStorage.setItem("cadence.askedPush","1");await enablePush(true);}
+    else localStorage.removeItem(PUSH_KEY);
+  }catch(e){}
+  if($("#setDlg").open)renderPush();
+}
+async function testPush(){
+  const b=$("#pushTestBtn");b.disabled=true;pushMsg("Sending…");
+  try{
+    const {data,error}=await sb.functions.invoke("send-push",{body:{test:true,lang:state.settings.lang.startsWith("fr")?"fr":"en"}});
+    if(error){let m=error.message;try{const j=await error.context.json();if(j&&j.error)m=j.error;}catch(e){}throw new Error(m);}
+    pushMsg(data&&data.sent?`Sent to ${data.sent} device${data.sent===1?"":"s"}. It should appear in a few seconds.`:"The server couldn't reach this device. Try turning notifications off and on again.",data&&data.sent?"":"err");
+  }catch(e){pushMsg(/not found|404|Failed to send/i.test(e.message)?"The send-push function isn't deployed yet (see setup steps).":"Test failed: "+e.message,"err");}
+  finally{b.disabled=false;}
+}
+function pushMsg(t,kind){const n=$("#pushNote");n.textContent=t;n.style.color=kind==="err"?"var(--clash)":"";}
+function renderPush(){
+  const sec=$("#pushSec");sec.hidden=!pushSupported()||!sb;if(sec.hidden)return;
+  const on=pushOn()&&!!sbUser,st=$("#pushStat");
+  st.className="pstat "+(on?"on":"off");st.querySelector("span").textContent=on?"On for this device":"Off on this device";
+  $("#pushOnBtn").hidden=on;$("#pushOffBtn").hidden=!on;$("#pushTestBtn").hidden=!on;
+  pushMsg(!sbUser?"Sign in to get reminders and the Sunday summary even when Cadence is closed.":on?"Reminders and the Sunday summary arrive here even when Cadence is closed. Uses your Reminders and Sunday summary settings above.":isIOS()&&!isStandalone()?"On iPhone, add Cadence to your Home Screen first, then turn this on from the installed app.":"Get reminders and the Sunday summary even when Cadence is closed.");
+}
+
+/* ================= privacy: export and delete ================= */
+async function saveFile(name,blob){
+  let dl=null;try{if(window.claude&&typeof window.claude.use==="function")dl=await window.claude.use("downloads");}catch(e){}
+  if(dl){await dl.save({filename:name,data:blob});return;}
+  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);
+}
+async function exportData(){
+  const out={app:"Cadence",format:1,exportedAt:new Date().toISOString(),
+    account:sbUser?{id:sbUser.id,email:sbUser.email,name:(sbUser.user_metadata||{}).name||"",createdAt:sbUser.created_at}:null,
+    settings:state.settings,events:state.events.slice().sort((a,b)=>a.date.localeCompare(b.date)||a.start-b.start),notificationDevices:[]};
+  if(sb&&sbUser){try{const {data}=await sb.from("push_subscriptions").select("endpoint,tz,created_at");out.notificationDevices=(data||[]).map(d=>({service:new URL(d.endpoint).host,timeZone:d.tz,addedAt:d.created_at}));}catch(e){}}
+  try{await saveFile(`cadence-data-${iso(today0())}.json`,new Blob([JSON.stringify(out,null,2)],{type:"application/json"}));toast("Your data was exported");}
+  catch(e){if(!(e&&e.code==="declined"))toast("Couldn't export your data. Try again.");}
+}
+let delMode="account";
+function openDelete(mode){
+  delMode=mode;$("#delInput").value="";$("#delGo").disabled=true;$("#delMsg").textContent="";
+  $("#delTitle").textContent=mode==="account"?"Delete your account?":"Delete all your data?";
+  $("#delSub").textContent=mode==="account"
+    ?"This permanently deletes your account, your whole timetable, settings, calendar links and notification devices. It can't be undone."
+    :"This removes every event and resets your settings"+(cloud?" everywhere you use Cadence":" on this device")+". It can't be undone.";
+  if($("#setDlg").open)$("#setDlg").close();
+  $("#delDlg").showModal();setTimeout(()=>$("#delInput").focus(),50);
+}
+function wipeLocal(){
+  try{Object.keys(localStorage).filter(k=>/^(semaine|cadence)\./.test(k)&&k!=="cadence.onboarded").forEach(k=>localStorage.removeItem(k));}catch(e){}
+}
+async function runDelete(){
+  const go=$("#delGo"),msg=$("#delMsg");go.disabled=true;msg.textContent="Deleting…";msg.style.color="";
+  try{
+    if(delMode==="account"){
+      const {error}=await sb.functions.invoke("delete-account",{body:{confirm:"DELETE"}});
+      if(error){let m=error.message;try{const j=await error.context.json();if(j&&j.error)m=j.error;}catch(e){}throw new Error(/not found|404|Failed to send/i.test(m)?"The delete-account function isn't deployed yet (see setup steps).":m);}
+      try{const reg=await swReady(),sub=await reg.pushManager.getSubscription();if(sub)await sub.unsubscribe();}catch(e){}
+      try{await sb.auth.signOut({scope:"local"});}catch(e){}
+      wiping=true;wipeLocal();state.events=[];
+      $("#delDlg").close();toast("Your account and data were deleted.",false,6000);setTimeout(()=>{wipeLocal();location.reload();},1800);
+    }else{
+      const dates=[...new Set(state.events.map(e=>e.date))];
+      state.events=[];
+      const keepCap=state.settings.capFrom;
+      state.settings={lang:"en-US",clock:"24",remind:30,summary:"on",pay:{rate:"",net:78,rates:{}},feeds:[],icsHidden:[],cap:964,capFrom:keepCap,theme:"auto"};
+      touch(dates);saveSettings();applyTheme();
+      if(!cloud)wipeLocal();saveLocal();
+      $("#delDlg").close();toast("All your data was deleted.",false,5000);
+    }
+  }catch(e){msg.textContent=e.message||"Something went wrong.";msg.style.color="var(--clash)";go.disabled=false;}
+}
+function renderPrivacy(){
+  const signed=!!(sb&&sbUser);
+  $("#delAcctBtn").hidden=!signed;$("#wipeBtn").hidden=signed;
+  $("#privLink").hidden=!!window.claude;
+  $("#privNote").textContent=window.claude?"Your timetable is saved privately to your Claude account and only used to run Cadence.":"Your timetable is only used to run Cadence. No ads, no tracking, never sold.";
+}
+
 /* ================= voice ================= */
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let rec=null,listening=false,silenceT=null,heardFinal="";
@@ -2187,6 +2347,7 @@ function setListening(on){listening=on;$("#mic").classList.toggle("on",on);$("#m
 function startVoice(){
   if(!SR){toast("Voice input isn't available in this browser. Type the command instead, or use Chrome, Edge or Safari.");$("#cmd").focus();return;}
   if(listening){rec&&rec.stop();return;}
+  try{if(!localStorage.getItem("cadence.voiceNotice")){localStorage.setItem("cadence.voiceNotice","1");toast(/Chrome|Edg|Android/i.test(navigator.userAgent)&&!/Firefox/i.test(navigator.userAgent)?"Voice is turned into text by your browser's speech service (Google in Chrome). Prefer privacy? Type instead.":"Voice is turned into text by your browser's speech service. Prefer privacy? Type instead.",false,7000);}}catch(e){}
   try{
     rec=new SR();rec.lang=state.settings.lang;rec.interimResults=true;rec.continuous=true;rec.maxAlternatives=1;
     heardFinal="";$("#cmd").value="";
@@ -2288,7 +2449,18 @@ $("#fType").onclick=e=>{const b=e.target.closest("button");if(b)setEditType(b.da
 $("#fSave").onclick=saveEdit;$("#fCancel").onclick=()=>$("#editDlg").close();$("#fDel").onclick=deleteEdit;
 $("#editDlg").addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.tagName==="INPUT"){e.preventDefault();saveEdit();}});
 
-$("#setBtn").onclick=()=>{
+$("#pushOnBtn").onclick=()=>enablePush(false);
+$("#pushOffBtn").onclick=()=>disablePush(false);
+$("#pushTestBtn").onclick=testPush;
+$("#exportBtn").onclick=exportData;
+$("#delExport").onclick=exportData;
+$("#delAcctBtn").onclick=()=>openDelete("account");
+$("#wipeBtn").onclick=()=>openDelete("data");
+$("#delInput").addEventListener("input",e=>{$("#delGo").disabled=e.target.value.trim().toUpperCase()!=="DELETE";});
+$("#delInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!$("#delGo").disabled){e.preventDefault();runDelete();}});
+$("#delGo").onclick=runDelete;
+$("#delCancel").onclick=()=>$("#delDlg").close();
+$("#setBtn").onclick=()=>{renderPush();renderPrivacy();
   const s=state.settings;$("#sLang").value=s.lang;$("#sClock").value=s.clock;$("#sCap").value=s.cap;$("#sFrom").value=s.capFrom;$("#sTheme").value=s.theme;$("#sRemind").value=String(s.remind||0);$("#sSummary").value=s.summary||"on";notifyNote();
   $("#setDlg").showModal();
 };
@@ -2361,7 +2533,7 @@ $("#aSignIn").onclick=()=>acctAuth(false);
 $("#aUp").onclick=()=>acctAuth(true);
 $("#aCancel").onclick=()=>$("#acctDlg").close();
 $("#aClose").onclick=()=>$("#acctDlg").close();
-$("#aOut").onclick=async()=>{$("#acctDlg").close();try{await sb.auth.signOut();}catch(e){}toast("Signed out");};
+$("#aOut").onclick=async()=>{$("#acctDlg").close();try{await disablePush(true);}catch(e){}try{await sb.auth.signOut();}catch(e){}toast("Signed out");};
 $("#aPass").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();acctAuth(false);}});
 $("#sCancel").onclick=()=>$("#setDlg").close();
 $("#sSave").onclick=()=>{
